@@ -96,10 +96,11 @@ const level: LevelData = {
 
 
 const Editor = () => {
-    const contentTop = document.getElementById("contentTop");
-
     const resize = () => {
-        if (contentTop) {
+        const contentTop = document.getElementById("contentTop");
+        const configPopup = document.getElementById("configPopup");
+
+        if (contentTop && configPopup) {
             const maxWidth = contentTop.clientWidth;
             const maxHeight = contentTop.clientHeight;
             const width = window.innerWidth;
@@ -107,6 +108,34 @@ const Editor = () => {
             const isMax = width >= maxWidth! && height >= maxHeight!;
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            configPopup.style.transform = isMax ? '' : 'scale(' + scale + ')';
+        }
+    }
+
+    const openSettings = () => {
+        const settings = document.getElementById("setting");
+        if (settings) {
+            settings.hidden = false;
+            setTimeout(() => settings.className = "popup awards popup-enter-done", 300);
+        }
+    }
+
+    const closeSettings = () => {
+        const settings = document.getElementById("setting");
+        if (settings) {
+            settings.className = "popup popup-exit awards";
+            setTimeout(() => {
+                settings.hidden = true;
+                settings.className = "popup popup-enter-active awards";
+            }, 300);
+        }
+    }
+
+    const settingMode = () => {
+        const wordMode = document.getElementById("wordMode") as HTMLInputElement;
+
+        if (wordMode.checked) {
+            
         }
     }
 
@@ -149,7 +178,7 @@ const Editor = () => {
                                     <div style={{ color: "#782cca" }}>aa</div>
                                     <div className="exitSound">
                                         <div className="close" title="Language and UI" id="languageSettingBtn"></div>
-                                        <button className="config" title="Settings" id="configSetting"></button>
+                                        <button className="config" title="Settings" id="configSetting" onClick={openSettings}></button>
                                     </div>
                                 </div>
                             </header>
@@ -186,13 +215,13 @@ const Editor = () => {
                 </div>
                 <div className="popup popup-enter-active awards" id="setting" hidden>
                     <div className="contentPopup" style={{ transform: "scale(0.297732)" }} id="configPopup">
-                        <button className="close" title="Close" id="settingClose"></button>
+                        <button className="close" title="Close" id="settingClose" onClick={closeSettings}></button>
                         <h3 id="settingLang">Settings</h3>
                         <div className="word-mode">
                             <h4 id="easyMode">Easy Mode</h4>
                             <p id="easyModeText">Don't know how to use JSON? Turn on easy mode and use the UI to customize</p>
                             <span className="onoff">
-                                <input id="wordMode" title="Easy Mode Switch" type="checkbox" />
+                                <input id="wordMode" title="Easy Mode Switch" type="checkbox" onChange={settingMode} />
                                 <label htmlFor="wordMode"></label>
                             </span>
                         </div>
