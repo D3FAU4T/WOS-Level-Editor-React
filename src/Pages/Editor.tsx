@@ -8,6 +8,7 @@ import Setting from '../Components/Setting';
 import Fantastic from '../Components/Fantastic';
 import { LevelData } from '../Interfaces/LevelData';
 import { getTotalWordsOfTheLevel, getWordsOfTheLevel } from '../Components/Functions';
+import Timebar from '../Components/Timebar';
 
 const level: LevelData = {
     "lang": "English",
@@ -19,7 +20,7 @@ const level: LevelData = {
         "timerPercentage": 100,
         "locks": {
             "total": 5,
-            "expired": 0
+            "expired": 1
         }
     },
     "column1": [
@@ -99,6 +100,7 @@ const level: LevelData = {
 
 const Editor = () => {
 
+    const [json, setJson] = useState(level);
     const [words, setWords] = useState(getWordsOfTheLevel(level));
     const [fakeLetters, setFakeLetters] = useState(level.fakeLetters);
     const [hiddenLetters, setHiddenLetters] = useState(level.hiddenLetters);
@@ -155,7 +157,7 @@ const Editor = () => {
                                             <div className="lastHits" id="syncingTxt"></div>
                                             <div className="containerLetters" id="syncSetter">
                                                 <p id="formWords">FORM WORDS WITH THE LETTERS BELOW</p>
-                                                <Letters Letters={words.split(' ').pop()!.replace(/\?/g, '')} FakeLetters={fakeLetters} HiddenLetters={hiddenLetters} Reveal={reveal}  />
+                                                <Letters Letters={words.split(' ').pop()!.replace(/\?/g, '')} FakeLetters={fakeLetters} HiddenLetters={hiddenLetters} Reveal={reveal} />
                                             </div>
                                         </div>
                                     </div>
@@ -175,19 +177,18 @@ const Editor = () => {
                             <div className="middle">
                                 <div className="time">
                                     <i className="icon"></i>
-                                    <div id="timebar">
-                                        <span style={{ width: "82%", transitionDuration: "117000ms" }} className=""></span>
-                                        <div className="mark" style={{ left: "12%" }}></div>
-                                        <div className="mark" style={{ left: "28%" }}></div>
-                                        <div className="mark" style={{ left: "45%" }}></div>
-                                        <div className="mark" style={{ left: "62%" }}></div>
-                                        <div className="mark" style={{ left: "78%" }}></div>
-                                    </div>
+                                    <Timebar
+                                        TimePercentage={json.timebar.timerPercentage}
+                                        TotalLocks={json.timebar.locks.total}
+                                        ExpiredLocks={json.timebar.locks.expired}
+                                        TransitionDuration="0ms"
+                                    />
+                                    {/* Original --> TransitionDuration="117000ms" */}
                                 </div>
                                 <div className="answer" id="answerslots">
-                                    <CreateColumn Column={level.column1} />
-                                    <CreateColumn Column={level.column2} />
-                                    <CreateColumn Column={level.column3} />
+                                    <CreateColumn Column={json.column1} />
+                                    <CreateColumn Column={json.column2} />
+                                    <CreateColumn Column={json.column3} />
                                 </div>
                             </div>
                         </div>
@@ -203,12 +204,14 @@ const Editor = () => {
                         </div>
                     </div>
                 </div>
-                <Setting 
-                UseEasyMode={false}
-                SetWords={words} SetWordParentFunction={setWords}
-                SetParentFakeLetters={setFakeLetters} SetParentHiddenLetters={setHiddenLetters}
-                Reveal={reveal} SetParentReveal={setReveal}
-                SetLevelNumber={levelNumber} SetLevelNumberParentFunction={setLevelNumber} />
+                <Setting
+                    UseEasyMode={false}
+                    SetJSON={json} SetParentJSONFunction={setJson}
+                    SetWords={words} SetWordParentFunction={setWords}
+                    SetParentFakeLetters={setFakeLetters} SetParentHiddenLetters={setHiddenLetters}
+                    Reveal={reveal} SetParentReveal={setReveal}
+                    SetLevelNumber={levelNumber} SetLevelNumberParentFunction={setLevelNumber}
+                />
                 {/* <!-- New Language Button --> */}
                 <div className="popup popup-enter-active awards" id="languageSetting" hidden>
                     <div className="contentPopup" style={{ transform: "scale(0.297732)" }} id="languagePopup">

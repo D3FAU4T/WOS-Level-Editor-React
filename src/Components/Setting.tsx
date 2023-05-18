@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { LevelData } from "../Interfaces/LevelData";
+import { createJSON, getWordsOfTheLevel } from "./Functions";
 
 type Props = {
     UseEasyMode: boolean;
@@ -7,6 +9,8 @@ type Props = {
     SetHiddenLetters?: string;
     Reveal: boolean;
     SetLevelNumber: number;
+    SetJSON: LevelData;
+    SetParentJSONFunction: React.Dispatch<React.SetStateAction<LevelData>>;
     SetWordParentFunction: React.Dispatch<React.SetStateAction<string>>;
     SetParentFakeLetters: React.Dispatch<React.SetStateAction<string>>;
     SetParentHiddenLetters: React.Dispatch<React.SetStateAction<string>>;
@@ -20,6 +24,15 @@ const Setting = (Props: Props) => {
 
     const handleWordsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         Props.SetWordParentFunction(e.target.value);
+        Props.SetParentJSONFunction(createJSON(
+            e.target.value.split(' '),
+            'd3fau4tbot',
+            false,
+            true,
+            "English",
+            Props.SetLevelNumber,
+            100,
+        ));
     }
 
     const handleFakeLettersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,10 +56,21 @@ const Setting = (Props: Props) => {
         Props.SetLevelNumberParentFunction(Props.SetLevelNumber - 1);
     }
 
+    const handleJSONChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const json: LevelData = JSON.parse(e.target.value);
+        Props.SetParentJSONFunction(json);
+        Props.SetLevelNumberParentFunction(parseInt(json.level));
+        Props.SetParentHiddenLetters(json.hiddenLetters);
+        Props.SetParentFakeLetters(json.fakeLetters);
+        Props.SetParentReveal(json.reveal);
+        Props.SetWordParentFunction(getWordsOfTheLevel(json));
+        console.log(Props.SetWords)
+    }
+
     const defaultSetting: JSX.Element[] = [
         <h4 id="JSONconfig" key='DefaultSettingH4'>JSON Config</h4>,
         <p id="JSONtxt" key='DefaultSettingP'>Paste the JSON configuration in order to update the board. Example format below.</p>,
-        <textarea className="" id="jsoninput" key='DefaultSettingTextArea'></textarea>,
+        <textarea className="" id="jsoninput" key='DefaultSettingTextArea' value={JSON.stringify(Props.SetJSON, null, 2)} onChange={handleJSONChange}></textarea>,
         <label className="error" key='DefaultSettingErrorLabel'></label>
     ];
 
@@ -65,7 +89,7 @@ const Setting = (Props: Props) => {
         </span>,
         <span key='SettingThirdRowHiddenLetters'>
             <h4 id="hiddenLettersTxt">Hidden Letters</h4>
-            <input className="" type="text" placeholder="E.g.: flt" value={Props.SetHiddenLetters} id="hiddenLetters" onChange={handleHiddenLettersChange}/>
+            <input className="" type="text" placeholder="E.g.: flt" value={Props.SetHiddenLetters} id="hiddenLetters" onChange={handleHiddenLettersChange} />
             <label className="error"></label>
         </span>,
         <span className="onoff" key='SettingThirdRowRevealSwitch'>
