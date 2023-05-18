@@ -1,3 +1,4 @@
+import React from 'react';
 import Play from './Pages/Play';
 import Editor from './Pages/Editor';
 
