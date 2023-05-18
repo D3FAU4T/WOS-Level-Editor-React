@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 type Props = {
     TotalWords: number;
@@ -6,14 +6,16 @@ type Props = {
 }
 
 const TimebarLine = (Props: Props) => {
-    const timebarLine = React.useRef<SVGPathElement>(null);
+    const timebarLine = useRef<SVGPathElement>(null);
 
-    if (timebarLine.current) {
-        const totalLength = timebarLine.current.getTotalLength();
-        const segmentLength = totalLength / Props.TotalWords;
-        timebarLine.current.style.strokeDasharray = `${Props.FoundedWords * segmentLength}, ${totalLength}`;
-        timebarLine.current.style.strokeDashoffset = `${segmentLength}`;
-    }
+    useEffect(() => {
+        if (timebarLine.current) {
+            const totalLength = timebarLine.current.getTotalLength();
+            const segmentLength = totalLength / Props.TotalWords;
+            timebarLine.current.style.strokeDasharray = `${Props.FoundedWords * segmentLength},${totalLength}`;
+            timebarLine.current.style.strokeDashoffset = `${segmentLength}`;
+        }
+    });
 
     return (
         <div>
