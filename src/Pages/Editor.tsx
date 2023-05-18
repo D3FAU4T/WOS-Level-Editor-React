@@ -11,8 +11,8 @@ import { getTotalWordsOfTheLevel, getWordsOfTheLevel } from '../Components/Funct
 
 const level: LevelData = {
     "lang": "English",
-    "fakeLetters": "yj",
-    "hiddenLetters": "c",
+    "fakeLetters": "",
+    "hiddenLetters": "",
     "reveal": false,
     "level": "1",
     "timebar": {
@@ -103,6 +103,7 @@ const Editor = () => {
     const [fakeLetters, setFakeLetters] = useState(level.fakeLetters);
     const [hiddenLetters, setHiddenLetters] = useState(level.hiddenLetters);
     const [reveal, setReveal] = useState(level.reveal);
+    const [levelNumber, setLevelNumber] = useState(parseInt(level.level));
 
     const resize = () => {
         const contentTop = document.getElementById("contentTop");
@@ -154,15 +155,15 @@ const Editor = () => {
                                             <div className="lastHits" id="syncingTxt"></div>
                                             <div className="containerLetters" id="syncSetter">
                                                 <p id="formWords">FORM WORDS WITH THE LETTERS BELOW</p>
-                                                <Letters Letters={words.split(' ').pop()!} FakeLetters={fakeLetters} HiddenLetters={hiddenLetters} Reveal={reveal}  />
+                                                <Letters Letters={words.split(' ').pop()!.replace(/\?/g, '')} FakeLetters={fakeLetters} HiddenLetters={hiddenLetters} Reveal={reveal}  />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="actionsHeader alignRight">
                                     <div className="metas">
-                                        <TimebarLine TotalWords={getTotalWordsOfTheLevel(level)} FoundedWords={11} />
-                                        <TimebarData CurrentPoints={69} Goal={176} Level={parseInt(level.level)} />
+                                        <TimebarLine TotalWords={words.split(' ').length} FoundedWords={2} />
+                                        <TimebarData CurrentPoints={69} Goal={176} Level={levelNumber} />
                                     </div>
                                     <div style={{ color: "#782cca" }}>aa</div>
                                     <div className="exitSound">
@@ -206,7 +207,8 @@ const Editor = () => {
                 UseEasyMode={false}
                 SetWords={words} SetWordParentFunction={setWords}
                 SetParentFakeLetters={setFakeLetters} SetParentHiddenLetters={setHiddenLetters}
-                Reveal={reveal} SetParentReveal={setReveal} />
+                Reveal={reveal} SetParentReveal={setReveal}
+                SetLevelNumber={levelNumber} SetLevelNumberParentFunction={setLevelNumber} />
                 {/* <!-- New Language Button --> */}
                 <div className="popup popup-enter-active awards" id="languageSetting" hidden>
                     <div className="contentPopup" style={{ transform: "scale(0.297732)" }} id="languagePopup">

@@ -6,10 +6,12 @@ type Props = {
     SetFakeLetters?: string;
     SetHiddenLetters?: string;
     Reveal: boolean;
+    SetLevelNumber: number;
     SetWordParentFunction: React.Dispatch<React.SetStateAction<string>>;
     SetParentFakeLetters: React.Dispatch<React.SetStateAction<string>>;
     SetParentHiddenLetters: React.Dispatch<React.SetStateAction<string>>;
     SetParentReveal: React.Dispatch<React.SetStateAction<boolean>>;
+    SetLevelNumberParentFunction: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Setting = (Props: Props) => {
@@ -30,6 +32,15 @@ const Setting = (Props: Props) => {
 
     const handleRevealChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         Props.SetParentReveal(e.target.checked);
+    }
+
+    const increaseLevel = () => {
+        Props.SetLevelNumberParentFunction(Props.SetLevelNumber + 1);
+    }
+
+    const decreaseLevel = () => {
+        if (Props.SetLevelNumber === 1) return;
+        Props.SetLevelNumberParentFunction(Props.SetLevelNumber - 1);
     }
 
     const defaultSetting: JSX.Element[] = [
@@ -68,9 +79,9 @@ const Setting = (Props: Props) => {
         <span key='SettingFourthRowLevel'>
             <h4 id="settingLevel">Level</h4>
             <span className="vol">
-                <button className="down" id="levelDown"></button>
-                <p id="levelNumber">1</p>
-                <button className="up" id="levelUp"></button>
+                <button className="down" id="levelDown" onClick={decreaseLevel}></button>
+                <p id="levelNumber">{Props.SetLevelNumber}</p>
+                <button className="up" id="levelUp" onClick={increaseLevel}></button>
             </span>
         </span>,
         <span key='SettingFourthRowLocks'>
