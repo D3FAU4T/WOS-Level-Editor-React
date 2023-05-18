@@ -20,14 +20,57 @@ export const normalizeLetter = (letter: string) => letter.normalize('NFD').repla
 
 export const getTotalWordsOfTheLevel = (level: LevelData) => {
     return level.column1
-    .concat(level.column2, level.column3)
-    .flatMap(slot => slot.word)
-    .length - 1;
+        .concat(level.column2, level.column3)
+        .flatMap(slot => slot.word)
+        .length - 1;
 }
 
 export const getWordsOfTheLevel = (level: LevelData) => {
     return level.column1
-    .concat(level.column2, level.column3)
-    .flatMap(slot => slot.word)
-    .join(' ');
+        .concat(level.column2, level.column3)
+        .flatMap(slot => slot.word)
+        .join(' ');
+}
+
+export const createJSON = (
+    words: string[],
+    username = 'd3fau4tbot',
+    locked = false,
+    reveal = true,
+    language: "English" | "Português" | "Français" = "English",
+    level = 1,
+    timerPercentage = 100,
+    totalLocks = 3,
+    expiredLocks = 0
+    ) => {
+
+    const board: LevelData = {
+        lang: language,
+        fakeLetters: "",
+        hiddenLetters: "",
+        reveal,
+        level: level.toString(),
+        timebar: {
+            timerPercentage,
+            locks: {
+                total: totalLocks,
+                expired: expiredLocks
+            }
+        },
+        column1: [],
+        column2: [],
+        column3: []
+    };
+
+    words.sort((a, b) => a.replace(/\?/g, '').length - b.replace(/\?/g, '').length || a.replace(/\?/g, '').localeCompare(b.replace(/\?/g, '')));
+    const wordsPerColumn = words.length >= 15 ? Math.ceil(words.length / 3) + 1 : Math.ceil(words.length / 3);
+
+    for (let i = 0; i < words.length; i++) {
+        const columnIdx = Math.floor(i / wordsPerColumn);
+        const wordObj = { word: words[i], username, locked, index: i };
+        // @ts-ignore
+        board[`column${columnIdx + 1}`].push(wordObj);
+    }
+
+    return board;
 }
