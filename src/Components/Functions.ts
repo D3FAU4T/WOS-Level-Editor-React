@@ -24,3 +24,10 @@ export const getTotalWordsOfTheLevel = (level: LevelData) => {
     .flatMap(slot => slot.word)
     .length - 1;
 }
+
+export const getWordsOfTheLevel = (level: LevelData) => {
+    return level.column1
+    .concat(level.column2, level.column3)
+    .flatMap(slot => slot.word)
+    .join(' ');
+}
