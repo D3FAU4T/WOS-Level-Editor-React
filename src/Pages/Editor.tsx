@@ -1,99 +1,49 @@
 import '../CSS/Editor.css';
 import React, { useEffect, useState } from "react";
-import TimebarLine from '../Components/TimebarLine';
-import TimebarData from '../Components/TimebarData';
 import Letters from '../Components/Letters';
 import CreateColumn from '../Components/CreateColumn';
 import Setting from '../Components/Setting';
 import Fantastic from '../Components/Fantastic';
 import { LevelData } from '../Interfaces/LevelData';
-import { getCountOfFoundedWords, getTotalWordsOfTheLevel, getWordsOfTheLevel } from '../Components/Functions';
 import Timebar from '../Components/Timebar';
+import GoalBar from '../Components/GoalBar';
+import { 
+    getCountOfFoundedWords,
+    getCurrentPoints,
+    getTotalPoints,
+    getTotalWordsOfTheLevel,
+    getWordsOfTheLevel,
+    makePassingPoints
+} from '../Components/Functions';
 
 const level: LevelData = {
     "lang": "English",
     "fakeLetters": "",
     "hiddenLetters": "",
-    "reveal": false,
+    "reveal": true,
     "level": "1",
     "timebar": {
         "timerPercentage": 100,
         "locks": {
-            "total": 5,
-            "expired": 1
+            "total": 3,
+            "expired": 0
         }
     },
     "column1": [
-        {
-            "word": "bail",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 0
-        },
-        {
-            "word": "ball",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 1
-        },
-        {
-            "word": "bill",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 2
-        },
-        {
-            "word": "blab",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 3
-        }
+        { "word": "coned", "username": "chantell_nz", "locked": false, "index": 0 },
+        { "word": "demon", "username": "draconis256_", "locked": false, "index": 1 },
+        { "word": "denim", "username": "chantell_nz", "locked": false, "index": 2 },
+        { "word": "medic", "username": "arch_a_tri", "locked": false, "index": 3 }
     ],
     "column2": [
-        {
-            "word": "call",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 4
-        },
-        {
-            "word": "ilia",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 5
-        },
-        {
-            "word": "alibi",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 6
-        },
-        {
-            "word": "cilia",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 7
-        }
+        { "word": "mince", "username": "arch_a_tri", "locked": false, "index": 4 },
+        { "word": "mined", "username": "d3fau4t", "locked": false, "index": 5 },
+        { "word": "coined", "username": "arch_a_tri", "locked": false, "index": 6 },
+        { "word": "income", "username": "chantell_nz", "locked": false, "index": 7 }
     ],
     "column3": [
-        {
-            "word": "iliac",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 8
-        },
-        {
-            "word": "lilac",
-            "username": "d3fau4t",
-            "locked": false,
-            "index": 9
-        },
-        {
-            "word": "biblical",
-            "username": "d3fau4t",
-            "locked": true,
-            "index": 10
-        }
+        { "word": "minced", "username": "d3fau4t", "locked": false, "index": 8 },
+        { "word": "demonic", "username": "draconis256_", "locked": false, "index": 9 }
     ]
 }
 
@@ -167,13 +117,13 @@ const Editor = () => {
                                     </div>
                                 </div>
                                 <div className="actionsHeader alignRight">
-                                    <div className="metas">
-                                        <TimebarLine
-                                            TotalWords={getTotalWordsOfTheLevel(json)}
-                                            FoundedWords={getCountOfFoundedWords(json) + 1}
-                                        />
-                                        <TimebarData CurrentPoints={69} Goal={176} Level={parseInt(json.level)} />
-                                    </div>
+                                    <GoalBar
+                                        CurrentPoints={getCurrentPoints(json)}
+                                        FoundedWords={getCountOfFoundedWords(json) + 1}
+                                        TotalWords={getTotalWordsOfTheLevel(json)}
+                                        Goal={makePassingPoints(json, getTotalPoints(json))}
+                                        MetaData={json}
+                                    />
                                     <div style={{ color: "#782cca" }}>aa</div>
                                     <div className="exitSound">
                                         <div className="close" title="Language and UI" id="languageSettingBtn"></div>

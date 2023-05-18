@@ -3,6 +3,9 @@ import React, { useEffect, useRef } from "react";
 type Props = {
     TotalWords: number;
     FoundedWords: number;
+    CurrentPoints: number;
+    Goal: number;
+    Color: "Gold" | "SkyBlue";
 }
 
 const TimebarLine = (Props: Props) => {
@@ -14,6 +17,7 @@ const TimebarLine = (Props: Props) => {
             const segmentLength = totalLength / Props.TotalWords;
             timebarLine.current.style.strokeDasharray = `${Props.FoundedWords * segmentLength},${totalLength}`;
             timebarLine.current.style.strokeDashoffset = `${segmentLength}`;
+            timebarLine.current.style.stroke = Props.Color === "Gold" ? "rgb(248,195,82)" : "rgb(26,255,238)";
         }
     });
 
