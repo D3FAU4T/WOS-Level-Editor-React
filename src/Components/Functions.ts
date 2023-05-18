@@ -37,6 +37,62 @@ export const getWordsOfTheLevel = (level: LevelData) => {
         .join(' ');
 }
 
+export const getCurrentPoints = (level: LevelData) => {
+    return [...level.column1, ...level.column2, ...level.column3]
+        .flatMap(slot => slot.word)
+        .filter(word => !word.includes('?'))
+        .map(word => wordPoint(word))
+        .reduce((a, b) => a + b, 0);
+}
+
+export const getTotalPoints = (level: LevelData) => {
+    return [...level.column1, ...level.column2, ...level.column3]
+        .flatMap(slot => slot.word)
+        .map(word => wordPoint(word))
+        .reduce((a, b) => a + b, 0);
+}
+
+export const makePassingPoints = (level: LevelData, totalPointForPointbar: number) => {
+    let passingPoints = 0;
+    switch (level.level) {
+        case '1': passingPoints = Math.round(totalPointForPointbar * 0.45); break;
+        case '2': passingPoints = Math.round(totalPointForPointbar * 0.47); break;
+        case '3': passingPoints = Math.round(totalPointForPointbar * 0.48); break;
+        case '4': passingPoints = Math.round(totalPointForPointbar * 0.5); break;
+        case '5': passingPoints = Math.round(totalPointForPointbar * 0.51); break;
+        case '6': passingPoints = Math.round(totalPointForPointbar * 0.52); break;
+        case '7': passingPoints = Math.round(totalPointForPointbar * 0.53); break;
+        case '8': passingPoints = Math.round(totalPointForPointbar * 0.56); break;
+        case '9': passingPoints = Math.round(totalPointForPointbar * 0.57); break;
+        case '10': passingPoints = Math.round(totalPointForPointbar * 0.58); break;
+        case '11': passingPoints = Math.round(totalPointForPointbar * 0.59); break;
+        case '12': passingPoints = Math.round(totalPointForPointbar * 0.61); break;
+        case '13': passingPoints = Math.round(totalPointForPointbar * 0.59); break;
+        case '14': passingPoints = Math.round(totalPointForPointbar * 0.63); break;
+        case '15': passingPoints = Math.round(totalPointForPointbar * 0.65); break;
+        case '16': passingPoints = Math.round(totalPointForPointbar * 0.67); break;
+        case '17': passingPoints = Math.round(totalPointForPointbar * 0.68); break;
+        case '18': passingPoints = Math.round(totalPointForPointbar * 0.69); break;
+        case '19': passingPoints = Math.round(totalPointForPointbar * 0.7); break;
+        case '20': passingPoints = Math.round(totalPointForPointbar * 0.73); break;
+        case '21': passingPoints = Math.round(totalPointForPointbar * 0.74); break;
+        case '22': passingPoints = Math.round(totalPointForPointbar * 0.75); break;
+        case '23': passingPoints = Math.round(totalPointForPointbar * 0.76); break;
+        case '24': passingPoints = Math.round(totalPointForPointbar * 0.78); break;
+        case '25': passingPoints = Math.round(totalPointForPointbar * 0.79); break;
+        case '26': passingPoints = Math.round(totalPointForPointbar * 0.81); break;
+        case '27': passingPoints = Math.round(totalPointForPointbar * 0.82); break;
+        case '28': passingPoints = Math.round(totalPointForPointbar * 0.83); break;
+        case '29': passingPoints = Math.round(totalPointForPointbar * 0.85); break;
+        case '30': passingPoints = Math.round(totalPointForPointbar * 0.86); break;
+        case '31': passingPoints = Math.round(totalPointForPointbar * 0.87); break;
+        case '32': passingPoints = Math.round(totalPointForPointbar * 0.89); break;
+        case '33': passingPoints = Math.round(totalPointForPointbar * 0.9); break;
+        default: passingPoints = Math.round(totalPointForPointbar * 0.9); break;
+    }
+    return passingPoints;
+}
+
 export const createJSON = (
     words: string[],
     username = 'd3fau4tbot',
