@@ -7,7 +7,7 @@ import CreateColumn from '../Components/CreateColumn';
 import Setting from '../Components/Setting';
 import Fantastic from '../Components/Fantastic';
 import { LevelData } from '../Interfaces/LevelData';
-import { getTotalWordsOfTheLevel, getWordsOfTheLevel } from '../Components/Functions';
+import { getCountOfFoundedWords, getTotalWordsOfTheLevel, getWordsOfTheLevel } from '../Components/Functions';
 import Timebar from '../Components/Timebar';
 
 const level: LevelData = {
@@ -25,7 +25,7 @@ const level: LevelData = {
     },
     "column1": [
         {
-            "word": "bail?",
+            "word": "bail",
             "username": "d3fau4t",
             "locked": false,
             "index": 0
@@ -97,19 +97,15 @@ const level: LevelData = {
     ]
 }
 
-
 const Editor = () => {
 
-    const [json, setJson] = useState(level);
-    const [words, setWords] = useState(getWordsOfTheLevel(level));
-    const [fakeLetters, setFakeLetters] = useState(level.fakeLetters);
-    const [hiddenLetters, setHiddenLetters] = useState(level.hiddenLetters);
-    const [reveal, setReveal] = useState(level.reveal);
-    const [levelNumber, setLevelNumber] = useState(parseInt(level.level));
+    const [json, setJson] = useState<LevelData>(level);
+    const [words, setWords] = useState<string>(getWordsOfTheLevel(level));
 
     const resize = () => {
         const contentTop = document.getElementById("contentTop");
         const configPopup = document.getElementById("configPopup");
+        // const contentPopupFantastic = document.getElementById("contentPopupFantastic");
 
         if (contentTop && configPopup) {
             const maxWidth = contentTop.clientWidth;
@@ -120,6 +116,9 @@ const Editor = () => {
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
             configPopup.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            // if (contentPopupFantastic) {
+            // contentPopupFantastic.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            // }
         }
     }
 
@@ -157,15 +156,23 @@ const Editor = () => {
                                             <div className="lastHits" id="syncingTxt"></div>
                                             <div className="containerLetters" id="syncSetter">
                                                 <p id="formWords">FORM WORDS WITH THE LETTERS BELOW</p>
-                                                <Letters Letters={words.split(' ').pop()!.replace(/\?/g, '')} FakeLetters={fakeLetters} HiddenLetters={hiddenLetters} Reveal={reveal} />
+                                                <Letters
+                                                    Letters={getWordsOfTheLevel(json).split(' ').pop()!.replace(/\?/g, '')}
+                                                    FakeLetters={json.fakeLetters}
+                                                    HiddenLetters={json.hiddenLetters}
+                                                    Reveal={json.reveal}
+                                                />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="actionsHeader alignRight">
                                     <div className="metas">
-                                        <TimebarLine TotalWords={words.split(' ').length} FoundedWords={2} />
-                                        <TimebarData CurrentPoints={69} Goal={176} Level={levelNumber} />
+                                        <TimebarLine
+                                            TotalWords={getTotalWordsOfTheLevel(json)}
+                                            FoundedWords={getCountOfFoundedWords(json) + 1}
+                                        />
+                                        <TimebarData CurrentPoints={69} Goal={176} Level={parseInt(json.level)} />
                                     </div>
                                     <div style={{ color: "#782cca" }}>aa</div>
                                     <div className="exitSound">
@@ -206,11 +213,15 @@ const Editor = () => {
                 </div>
                 <Setting
                     UseEasyMode={false}
+                    SetLevelNumber={parseInt(json.level)}
                     SetJSON={json} SetParentJSONFunction={setJson}
-                    SetWords={words} SetWordParentFunction={setWords}
-                    SetParentFakeLetters={setFakeLetters} SetParentHiddenLetters={setHiddenLetters}
-                    Reveal={reveal} SetParentReveal={setReveal}
-                    SetLevelNumber={levelNumber} SetLevelNumberParentFunction={setLevelNumber}
+                    SetWords={words} SetParentWordsFunction={setWords}
+                    SetTotalLocks={json.timebar.locks.total}
+                    SetExpiredLocks={json.timebar.locks.expired}
+                    Reveal={json.reveal}
+                    SetTime={json.timebar.timerPercentage}
+                    SetFakeLetters={json.fakeLetters}
+                    SetHiddenLetters={json.hiddenLetters}
                 />
                 {/* <!-- New Language Button --> */}
                 <div className="popup popup-enter-active awards" id="languageSetting" hidden>

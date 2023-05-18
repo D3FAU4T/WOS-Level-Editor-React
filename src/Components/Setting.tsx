@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LevelData } from "../Interfaces/LevelData";
-import { createJSON, getWordsOfTheLevel } from "./Functions";
+import { createJSON } from "./Functions";
 
 type Props = {
     UseEasyMode: boolean;
@@ -10,12 +10,11 @@ type Props = {
     Reveal: boolean;
     SetLevelNumber: number;
     SetJSON: LevelData;
+    SetTotalLocks: number;
+    SetExpiredLocks: number;
+    SetTime: number;
+    SetParentWordsFunction: React.Dispatch<React.SetStateAction<string>>;
     SetParentJSONFunction: React.Dispatch<React.SetStateAction<LevelData>>;
-    SetWordParentFunction: React.Dispatch<React.SetStateAction<string>>;
-    SetParentFakeLetters: React.Dispatch<React.SetStateAction<string>>;
-    SetParentHiddenLetters: React.Dispatch<React.SetStateAction<string>>;
-    SetParentReveal: React.Dispatch<React.SetStateAction<boolean>>;
-    SetLevelNumberParentFunction: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const Setting = (Props: Props) => {
@@ -23,48 +22,208 @@ const Setting = (Props: Props) => {
     const [settingMode, setSettingMode] = useState(false);
 
     const handleWordsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        Props.SetWordParentFunction(e.target.value);
+        Props.SetParentWordsFunction(e.target.value);
+
         Props.SetParentJSONFunction(createJSON(
             e.target.value.split(' '),
             'd3fau4tbot',
             false,
-            true,
+            Props.Reveal,
             "English",
             Props.SetLevelNumber,
-            100,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
         ));
     }
 
     const handleFakeLettersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        Props.SetParentFakeLetters(e.target.value);
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            e.target.value,
+            Props.SetHiddenLetters,
+        ));
     }
 
     const handleHiddenLettersChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        Props.SetParentHiddenLetters(e.target.value);
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            e.target.value,
+        ));
     }
 
     const handleRevealChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        Props.SetParentReveal(e.target.checked);
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            e.target.checked,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
     }
 
     const increaseLevel = () => {
-        Props.SetLevelNumberParentFunction(Props.SetLevelNumber + 1);
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber + 1,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
     }
 
     const decreaseLevel = () => {
         if (Props.SetLevelNumber === 1) return;
-        Props.SetLevelNumberParentFunction(Props.SetLevelNumber - 1);
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber - 1,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
+    }
+
+    const increaseTotalLocks = () => {
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks + 1,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
+    }
+
+    const decreaseTotalLocks = () => {
+        if (Props.SetTotalLocks === 2) return;
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks - 1,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
+    }
+
+    const increaseExpiredLocks = () => {
+        if (Props.SetExpiredLocks === Props.SetTotalLocks) return;
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks + 1,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
+    }
+
+    const decreaseExpiredLocks = () => {
+        if (Props.SetExpiredLocks === 0) return;
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks - 1,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
+    }
+
+    const increaseTime = () => {
+        if (Props.SetTime === 100) return;
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime + 1,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
+    }
+
+    const decreaseTime = () => {
+        if (Props.SetTime === 1) return;
+        Props.SetParentJSONFunction(createJSON(
+            Props.SetWords.split(' '),
+            'd3fau4tbot',
+            false,
+            Props.Reveal,
+            "English",
+            Props.SetLevelNumber,
+            Props.SetTime - 1,
+            Props.SetTotalLocks,
+            Props.SetExpiredLocks,
+            Props.SetFakeLetters,
+            Props.SetHiddenLetters,
+        ));
     }
 
     const handleJSONChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const json: LevelData = JSON.parse(e.target.value);
         Props.SetParentJSONFunction(json);
-        Props.SetLevelNumberParentFunction(parseInt(json.level));
-        Props.SetParentHiddenLetters(json.hiddenLetters);
-        Props.SetParentFakeLetters(json.fakeLetters);
-        Props.SetParentReveal(json.reveal);
-        Props.SetWordParentFunction(getWordsOfTheLevel(json));
-        console.log(Props.SetWords)
     }
 
     const defaultSetting: JSX.Element[] = [
@@ -111,25 +270,25 @@ const Setting = (Props: Props) => {
         <span key='SettingFourthRowLocks'>
             <h4 id="settingLocks">Locks</h4>
             <span className="vol">
-                <button className="down" id="tLockDown"></button>
-                <p id="tLockNumber">3</p>
-                <button className="up" id="tLockUp"></button>
+                <button className="down" id="tLockDown" onClick={decreaseTotalLocks}></button>
+                <p id="tLockNumber">{Props.SetTotalLocks}</p>
+                <button className="up" id="tLockUp" onClick={increaseTotalLocks}></button>
             </span>
         </span>,
         <span key='SettingFourthRowUnlocked'>
             <h4 id="settingUnlocked">Unlocked</h4>
             <span className="vol">
-                <button className="down" id="uLockDown"></button>
-                <p id="uLockNumber">0</p>
-                <button className="up" id="uLockUp"></button>
+                <button className="down" id="uLockDown" onClick={decreaseExpiredLocks}></button>
+                <p id="uLockNumber">{Props.SetExpiredLocks}</p>
+                <button className="up" id="uLockUp" onClick={increaseExpiredLocks}></button>
             </span>
         </span>,
         <span key='SettingFourthRowTime'>
             <h4 id="settingTime">Time</h4>
             <span className="vol">
-                <button className="down" id="timebarDown"></button>
-                <p id="timebarNumber">100</p>
-                <button className="up" id="timebarUp"></button>
+                <button className="down" id="timebarDown" onClick={decreaseTime}></button>
+                <p id="timebarNumber">{Props.SetTime}</p>
+                <button className="up" id="timebarUp" onClick={increaseTime}></button>
             </span>
         </span>
     ];
