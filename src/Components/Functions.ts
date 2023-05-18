@@ -19,15 +19,20 @@ export const wordPoint = (input: string) => {
 export const normalizeLetter = (letter: string) => letter.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 export const getTotalWordsOfTheLevel = (level: LevelData) => {
-    return level.column1
-        .concat(level.column2, level.column3)
+    return [...level.column1, ...level.column2, ...level.column3]
         .flatMap(slot => slot.word)
-        .length - 1;
+        .length;
+}
+
+export const getCountOfFoundedWords = (level: LevelData) => {
+    return [...level.column1, ...level.column2, ...level.column3]
+        .flatMap(slot => slot.word)
+        .filter(word => !word.includes('?'))
+        .length;
 }
 
 export const getWordsOfTheLevel = (level: LevelData) => {
-    return level.column1
-        .concat(level.column2, level.column3)
+    return [...level.column1, ...level.column2, ...level.column3]
         .flatMap(slot => slot.word)
         .join(' ');
 }
@@ -41,13 +46,15 @@ export const createJSON = (
     level = 1,
     timerPercentage = 100,
     totalLocks = 3,
-    expiredLocks = 0
-    ) => {
+    expiredLocks = 0,
+    fakeLetters = "",
+    hiddenLetters = ""
+) => {
 
     const board: LevelData = {
         lang: language,
-        fakeLetters: "",
-        hiddenLetters: "",
+        fakeLetters,
+        hiddenLetters,
         reveal,
         level: level.toString(),
         timebar: {
