@@ -21,6 +21,6 @@ export const normalizeLetter = (letter: string) => letter.normalize('NFD').repla
 export const getTotalWordsOfTheLevel = (level: LevelData) => {
     return level.column1
     .concat(level.column2, level.column3)
-    .map(slot => slot.word)
+    .flatMap(slot => slot.word)
     .length - 1;
 }
