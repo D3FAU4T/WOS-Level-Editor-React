@@ -15,6 +15,8 @@ import {
     getWordsOfTheLevel,
     makePassingPoints
 } from '../Components/Functions';
+import LanguageSetting from '../Components/LanguageSetting';
+import Topbar from '../Components/Topbar';
 
 const level: LevelData = {
     "lang": "English",
@@ -51,13 +53,15 @@ const Editor = () => {
 
     const [json, setJson] = useState<LevelData>(level);
     const [words, setWords] = useState<string>(getWordsOfTheLevel(level));
+    const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
 
     const resize = () => {
         const contentTop = document.getElementById("contentTop");
         const configPopup = document.getElementById("configPopup");
+        const languagePopup = document.getElementById("languagePopup");
         // const contentPopupFantastic = document.getElementById("contentPopupFantastic");
 
-        if (contentTop && configPopup) {
+        if (contentTop && configPopup && languagePopup) {
             const maxWidth = contentTop.clientWidth;
             const maxHeight = contentTop.clientHeight;
             const width = window.innerWidth;
@@ -66,6 +70,7 @@ const Editor = () => {
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
             configPopup.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            languagePopup.style.transform = isMax ? '' : 'scale(' + scale + ')';
             // if (contentPopupFantastic) {
             // contentPopupFantastic.style.transform = isMax ? '' : 'scale(' + scale + ')';
             // }
@@ -77,6 +82,14 @@ const Editor = () => {
         if (settings) {
             settings.hidden = false;
             setTimeout(() => settings.className = "popup awards popup-enter-done", 300);
+        }
+    }
+
+    const openLanguageSettings = () => {
+        const languageSettings = document.getElementById("languageSetting");
+        if (languageSettings) {
+            languageSettings.hidden = false;
+            setTimeout(() => languageSettings.className = "popup awards popup-enter-done", 300);
         }
     }
 
@@ -95,16 +108,11 @@ const Editor = () => {
                             <header>
                                 <span className="wos"></span>
                                 <div className="word">
-                                    <div className="contentFeedback" id="topbar">
-                                        <div className="levelCompleted">
-                                            <span id="congratulations">CONGRATULATIONS!</span>
-                                            <p id="levelCompleted">LEVEL COMPLETED!</p>
-                                        </div>
-                                    </div>
+                                    <Topbar Mode='hidden' Blink />
                                     <div className="contentAnagram">
                                         <div>
-                                            <div className="lastHits" id="syncingTxt"></div>
-                                            <div className="containerLetters" id="syncSetter">
+                                            <div className="lastHits" id="syncingTxt">{syncingText}</div>
+                                            <div className={`containerLetters${syncingText === null ? "" : " lettersExit"}`} id="syncSetter">
                                                 <p id="formWords">FORM WORDS WITH THE LETTERS BELOW</p>
                                                 <Letters
                                                     Letters={getWordsOfTheLevel(json).split(' ').pop()!.replace(/\?/g, '')}
@@ -126,7 +134,7 @@ const Editor = () => {
                                     />
                                     <div style={{ color: "#782cca" }}>aa</div>
                                     <div className="exitSound">
-                                        <div className="close" title="Language and UI" id="languageSettingBtn"></div>
+                                        <div className="close" title="Language and UI" id="languageSettingBtn" onClick={openLanguageSettings}></div>
                                         <button className="config" title="Settings" id="configSetting" onClick={openSettings}></button>
                                     </div>
                                 </div>
@@ -174,32 +182,7 @@ const Editor = () => {
                     SetHiddenLetters={json.hiddenLetters}
                 />
                 {/* <!-- New Language Button --> */}
-                <div className="popup popup-enter-active awards" id="languageSetting" hidden>
-                    <div className="contentPopup" style={{ transform: "scale(0.297732)" }} id="languagePopup">
-                        <button className="close" title="Close" id="languageSettingClose"></button>
-                        <h3 id="langUI">Language and UI</h3>
-                        <div className="sounds" id="firstRow">
-                            <span>
-                                <h4 id="LangLanguage">Language</h4>
-                                <span className="vol">
-                                    <button className="down" title="Previous" id="languageDown"></button>
-                                    <p id="languageNumber">English</p>
-                                    <button className="up" title="Next" id="languageUp"></button>
-                                </span>
-                            </span>
-                        </div>
-                        <div className="word-mode">
-                            <h4 id="syncTxt">Synchronization</h4>
-                            <p id="syncSubTxt">Triggers the "Syncing last hits" instead of letters</p>
-                            <br />
-                            <span className="onoff">
-                                <input id="sync" title="Enable sync" type="checkbox" />
-                                <label htmlFor="sync"></label>
-                            </span>
-                        </div>
-                        <div></div>
-                    </div>
-                </div>
+                <LanguageSetting ChangeSyncState={setSyncingText} />
                 <Fantastic Hidden />
             </div>
         </div>
