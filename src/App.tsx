@@ -5,7 +5,8 @@ import Editor from './Pages/Editor';
 export default function App() {
   return (
     <main>
-      <Editor />
+      <Play />
+      {/* <Editor /> */}
     </main>
   )
 }
