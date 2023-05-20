@@ -4,7 +4,7 @@ import Letters from '../Components/Letters';
 import CreateColumn from '../Components/CreateColumn';
 import Setting from '../Components/Setting';
 import Fantastic from '../Components/Fantastic';
-import { LevelData } from '../Interfaces/LevelData';
+import { LevelData, Slot } from '../Interfaces/LevelData';
 import Timebar from '../Components/Timebar';
 import GoalBar from '../Components/GoalBar';
 import { 
@@ -93,6 +93,15 @@ const Editor = () => {
         }
     }
 
+    const updateSlotLock = (state: boolean, index: number) => {
+        (["column1", "column2", "column3"] as unknown as [keyof typeof json]).forEach((column) => {            
+            const columnData = json[column] as Slot[];
+            const slot = columnData.find((slot) => slot.index === index);
+            if (slot) slot.locked = state;
+        });
+        setJson({ ...json });
+    }
+
     useEffect(() => {
         resize();
         window.addEventListener('resize', resize);
@@ -108,7 +117,7 @@ const Editor = () => {
                             <header>
                                 <span className="wos"></span>
                                 <div className="word">
-                                    <Topbar Mode='hidden' Blink />
+                                    <Topbar Mode='Completed' Blink />
                                     <div className="contentAnagram">
                                         <div>
                                             <div className="lastHits" id="syncingTxt">{syncingText}</div>
@@ -151,9 +160,9 @@ const Editor = () => {
                                     {/* Original --> TransitionDuration="117000ms" */}
                                 </div>
                                 <div className="answer" id="answerslots">
-                                    <CreateColumn Column={json.column1} />
-                                    <CreateColumn Column={json.column2} />
-                                    <CreateColumn Column={json.column3} />
+                                    <CreateColumn MetaData={json} Column={json.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock}/>
+                                    <CreateColumn MetaData={json} Column={json.column2} StartingIndex={json.column1.length} SlotLockUpdater={updateSlotLock} />
+                                    <CreateColumn MetaData={json} Column={json.column3} StartingIndex={json.column1.length + json.column2.length} SlotLockUpdater={updateSlotLock} />
                                 </div>
                             </div>
                         </div>

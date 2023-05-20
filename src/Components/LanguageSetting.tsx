@@ -18,15 +18,8 @@ const LanguageSetting = (Props: Props) => {
     }
 
     const handleSyncChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const syncingText = document.getElementById("syncingTxt");
-
-        if (e.target.checked) {
-            Props.ChangeSyncState(<span id='syncSwitch'>SYNCING LAST HITS</span>);
-        }
-
-        else {
-            Props.ChangeSyncState(null);
-        }
+        if (e.target.checked) Props.ChangeSyncState(<span id='syncSwitch'>SYNCING LAST HITS</span>);
+        else Props.ChangeSyncState(null);
     }
 
     return (
