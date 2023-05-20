@@ -6,10 +6,10 @@ type Props = {
 
 const Fantastic = (Props: Props) => {
     return (
-        <div hidden={Props.Hidden || false}>
-            <div className="popup wdone popup-enter-done">
+        <div>
+            <div className="popup wdone popup-enter-done" hidden={Props.Hidden}>
                 <div className="brilho"></div>
-                <div className="contentPopupFantastic" style={{ transform: "scale(0.234405)" }}>
+                <div className="contentPopup" style={{ transform: "scale(0.234405)" }} id="Fantastic">
                     <div className="welldone">
                         <div className="header">
                             <h3>FANTASTIC!</h3>
@@ -23,8 +23,7 @@ const Fantastic = (Props: Props) => {
                                 </span>
                             </div>
                             <div className="center">
-                                <div className="lottie">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 290" width="800"
+                                <div className="lottie"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 290" width="800"
                                     height="290" style={{ width: "100%", height: "100%", transform: "translate3d(0px, 0px, 0px)" }}
                                     preserveAspectRatio="xMidYMid meet">
                                     <defs>

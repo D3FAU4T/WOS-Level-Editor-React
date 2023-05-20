@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Letters from '../Components/Letters';
 import CreateColumn from '../Components/CreateColumn';
 import Setting from '../Components/Setting';
-import Fantastic from '../Components/Fantastic';
 import { LevelData, Slot } from '../Interfaces/LevelData';
 import Timebar from '../Components/Timebar';
 import GoalBar from '../Components/GoalBar';
@@ -59,7 +58,6 @@ const Editor = () => {
         const contentTop = document.getElementById("contentTop");
         const configPopup = document.getElementById("configPopup");
         const languagePopup = document.getElementById("languagePopup");
-        // const contentPopupFantastic = document.getElementById("contentPopupFantastic");
 
         if (contentTop && configPopup && languagePopup) {
             const maxWidth = contentTop.clientWidth;
@@ -71,9 +69,6 @@ const Editor = () => {
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
             configPopup.style.transform = isMax ? '' : 'scale(' + scale + ')';
             languagePopup.style.transform = isMax ? '' : 'scale(' + scale + ')';
-            // if (contentPopupFantastic) {
-            // contentPopupFantastic.style.transform = isMax ? '' : 'scale(' + scale + ')';
-            // }
         }
     }
 
@@ -192,7 +187,6 @@ const Editor = () => {
                 />
                 {/* <!-- New Language Button --> */}
                 <LanguageSetting ChangeSyncState={setSyncingText} />
-                <Fantastic Hidden />
             </div>
         </div>
     );
