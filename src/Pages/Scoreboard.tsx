@@ -3,9 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import lottie from 'lottie-web';
 import animationData from '../Animations/fantastic.json';
 import contagem from "../Animations/contagem.json";
-import Countdown from '../Components/Countdown';
 
 type Props = {
+    CurrentLevel: number;
+    UpNext: number;
+    LevelRanking: { [key: string]: number };
     PageChanger: (page: string) => void;
 }
 
@@ -31,6 +33,23 @@ const Scoreboard = (Props: Props) => {
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
             countdownScale!.style.transform = isMax ? '' : 'scale(' + scale + ')';
         }
+    }
+
+    const getScoreJSX = (ranking: { [key: string]: number }): JSX.Element[] => {
+        const levelRanking: JSX.Element[] = [];
+        let levelRankingCount = 1;
+
+        for (const [key, value] of Object.entries(ranking)) {
+            levelRanking.push(
+                <li key={'Score' + key}>
+                    <span className="pos">{levelRankingCount}</span>
+                    <span className="nick">{key}</span>
+                    <span className="pts">{value}</span>
+                </li>
+            );
+            levelRankingCount++;
+        }
+        return levelRanking;
     }
 
     useEffect(() => {
@@ -90,7 +109,7 @@ const Scoreboard = (Props: Props) => {
                             <span className="wos"></span>
                             <div className="levelUp">
                                 <div className="lottie" ref={containerRef}></div>
-                                <span id="UpNext">UP NEXT: <strong>LEVEL 7</strong></span>
+                                <span id="UpNext">UP NEXT: <strong>LEVEL {Props.UpNext}</strong></span>
                             </div>
                             <div className="rightHeader">
                                 <button className="config" title="Settings"></button>
@@ -99,13 +118,15 @@ const Scoreboard = (Props: Props) => {
                         <div className="middle">
                             <div className="rkgPartida">
                                 <div className="title">
-                                    <h4 id="LevelS"><strong>LEVEL 4 </strong>RANKING</h4>
+                                    <h4 id="LevelS"><strong>LEVEL {Props.CurrentLevel} </strong>RANKING</h4>
                                     <button className="reward">REWARD</button>
                                 </div>
                                 <div className="containerScroll">
                                     <div className="scroll">
                                         <div className="scrollElements">
-                                            <ul id="LevelRanking"></ul>
+                                            <ul id="LevelRanking">
+                                                {getScoreJSX(Props.LevelRanking)}
+                                            </ul>
                                         </div>
                                         <div className="scrollBar">
                                             <div className="scrollTrack" style={{ top: "10px" }}></div>
@@ -121,7 +142,9 @@ const Scoreboard = (Props: Props) => {
                                 <div className="containerScroll">
                                     <div className="scroll">
                                         <div className="scrollElements">
-                                            <ul id="TotalRanking"></ul>
+                                            <ul id="TotalRanking">
+                                                {getScoreJSX(Props.LevelRanking)}
+                                            </ul>
                                         </div>
                                         <div className="scrollBar">
                                             <div className="scrollTrack" style={{ top: "10px" }}></div>

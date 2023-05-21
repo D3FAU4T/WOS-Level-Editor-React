@@ -4,49 +4,19 @@ import GoalBar from '../Components/GoalBar';
 import Topbar from '../Components/Topbar';
 import { LevelData, Slot } from '../Interfaces/LevelData';
 import Letters from '../Components/Letters';
-import { getCountOfFoundedWords, getCurrentPoints, getTotalPoints, getTotalWordsOfTheLevel, getWordsOfTheLevel, makePassingPoints } from '../Components/Functions';
+import { calculateStars, getCountOfFoundedWords, getCurrentPoints, getTotalPoints, getTotalWordsOfTheLevel, getWordsOfTheLevel, makePassingPoints } from '../Components/Functions';
 import Fantastic from '../Components/Fantastic';
 import CreateColumn from '../Components/CreateColumn';
 import LanguageSetting from '../Components/LanguageSetting';
 
 type Props = {
+    MetaData: LevelData;
     PageChanger: (page: string) => void;
-}
-
-const level: LevelData = {
-    "lang": "English",
-    "fakeLetters": "",
-    "hiddenLetters": "",
-    "reveal": true,
-    "level": "1",
-    "timebar": {
-        "timerPercentage": 100,
-        "locks": {
-            "total": 3,
-            "expired": 0
-        }
-    },
-    "column1": [
-        { "word": "coned", "username": "chantell_nz", "locked": false, "index": 0 },
-        { "word": "demon", "username": "draconis256_", "locked": false, "index": 1 },
-        { "word": "denim", "username": "chantell_nz", "locked": false, "index": 2 },
-        { "word": "medic", "username": "arch_a_tri", "locked": false, "index": 3 }
-    ],
-    "column2": [
-        { "word": "mince", "username": "arch_a_tri", "locked": false, "index": 4 },
-        { "word": "mined", "username": "d3fau4t", "locked": false, "index": 5 },
-        { "word": "coined", "username": "arch_a_tri", "locked": false, "index": 6 },
-        { "word": "income", "username": "chantell_nz", "locked": false, "index": 7 }
-    ],
-    "column3": [
-        { "word": "minced?", "username": "d3fau4t", "locked": false, "index": 8 },
-        { "word": "demonic", "username": "draconis256_", "locked": false, "index": 9 }
-    ]
 }
 
 const Play = (Props: Props) => {
 
-    const [json, setJson] = useState<LevelData>(level);
+    const [json, setJson] = useState<LevelData>(Props.MetaData);
     const [levelFinished, setLevelFinished] = useState<boolean>(false);
     const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
 
@@ -193,10 +163,16 @@ const Play = (Props: Props) => {
                     TotalWords={getTotalWordsOfTheLevel(json)}
                     CurrentLevel={parseInt(json.level)}
                     FoundedWords={getCountOfFoundedWords(json)}
-                    SkippedLevels={2}
                     PageChanger={Props.PageChanger}
+                    SkippedLevels={
+                        calculateStars(
+                            getTotalPoints(json),
+                            getCurrentPoints(json),
+                            parseInt(json.level)
+                        )
+                    }
                 />
-            </div>            
+            </div>
         </div>
     );
 }

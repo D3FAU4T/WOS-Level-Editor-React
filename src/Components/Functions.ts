@@ -93,6 +93,79 @@ export const makePassingPoints = (level: LevelData, totalPointForPointbar: numbe
     return passingPoints;
 }
 
+export const extractScore = (level: LevelData) => {
+    const score: { [username: string]: number } = {};
+
+    level.column1
+        .concat(level.column2, level.column3)
+        .forEach(slot => {
+            if (score[slot.username] === undefined) {
+                score[slot.username] = wordPoint(slot.word.replace(/\?/g, ""));
+            }
+
+            else {
+                score[slot.username] += wordPoint(slot.word.replace(/\?/g, ""));
+            }
+        });
+
+    return Object.entries(score)
+        .sort((a, b) => b[1] - a[1])
+        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
+}
+
+
+
+export const calculateStars = (totalPoints: number, currentPoints: number, levelNumber: number): number => {
+
+    let passingPercentage = 0.45;
+
+    switch (levelNumber) {
+        case 1: passingPercentage = 0.45;
+        case 2: passingPercentage = 0.47;
+        case 3: passingPercentage = 0.48;
+        case 4: passingPercentage = 0.5;
+        case 5: passingPercentage = 0.51;
+        case 6: passingPercentage = 0.52;
+        case 7: passingPercentage = 0.53;
+        case 8: passingPercentage = 0.56;
+        case 9: passingPercentage = 0.57;
+        case 10: passingPercentage = 0.58;
+        case 11: passingPercentage = 0.59;
+        case 12: passingPercentage = 0.61;
+        case 13: passingPercentage = 0.59;
+        case 14: passingPercentage = 0.63;
+        case 15: passingPercentage = 0.65;
+        case 16: passingPercentage = 0.67;
+        case 17: passingPercentage = 0.68;
+        case 18: passingPercentage = 0.69;
+        case 19: passingPercentage = 0.7;
+        case 20: passingPercentage = 0.73;
+        case 21: passingPercentage = 0.74;
+        case 22: passingPercentage = 0.75;
+        case 23: passingPercentage = 0.76;
+        case 24: passingPercentage = 0.78;
+        case 25: passingPercentage = 0.79;
+        case 26: passingPercentage = 0.81;
+        case 27: passingPercentage = 0.82;
+        case 28: passingPercentage = 0.83;
+        case 29: passingPercentage = 0.85;
+        case 30: passingPercentage = 0.86;
+        case 31: passingPercentage = 0.87;
+        case 32: passingPercentage = 0.89;
+        case 33: passingPercentage = 0.9;
+        default: passingPercentage = 0.9;
+    }
+
+    const passingPoint = Math.round(totalPoints * passingPercentage);
+
+    console.log(passingPoint, totalPoints, currentPoints);
+
+    if (currentPoints > (totalPoints - 10)) return 3;
+    else if (currentPoints >= (totalPoints - 9)) return 2;
+    else if (currentPoints >= passingPoint) return 1;
+    else return 0;
+}
+
 export const createJSON = (
     words: string[],
     username = 'd3fau4tbot',

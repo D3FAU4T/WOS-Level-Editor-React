@@ -4,7 +4,7 @@ import animationData from '../Animations/estrela.json';
 
 type Props = {
     Hidden?: boolean;
-    SkippedLevels: 1 | 2 | 3;
+    SkippedLevels: number;
     CurrentLevel: number;
     TotalWords: number;
     FoundedWords: number;
@@ -25,7 +25,7 @@ const Fantastic = (Props: Props) => {
             });
 
             animation.addEventListener('drawnFrame', (event) => {
-                if (event.currentTime > (Props.SkippedLevels === 1 ? 20 : Props.SkippedLevels === 2 ? 39 : 60)) {
+                if (event.currentTime > (Props.SkippedLevels === 1 ? 20 : Props.SkippedLevels === 2 ? 39 : 58)) {
                     animation.pause();
                     animation.removeEventListener('drawnFrame');
                     setTimeout(() => {
