@@ -56,6 +56,12 @@ const Scoreboard = (Props: Props) => {
         resize();
         window.addEventListener('resize', resize);
 
+        setTimeout(() => {
+            if (animationRef.current) {
+                animationRef.current.className = "interval fade-enter-done";
+            }
+        }, 1000);
+
         if (containerRef.current) {
             lottie.loadAnimation({
                 container: containerRef.current,
@@ -64,12 +70,6 @@ const Scoreboard = (Props: Props) => {
                 autoplay: true,
                 animationData
             })
-        }
-
-        if (animationRef.current) {
-            setTimeout(() => {
-                animationRef.current!.className = "interval fade-enter-done";
-            }, 900)
         }
 
         return () => window.removeEventListener('resize', resize);
@@ -87,14 +87,25 @@ const Scoreboard = (Props: Props) => {
                 animationData: contagem,
             });
 
+            setTimeout(() => {
+                countdownClassRef.current!.className = "countdown popup-enter-done";
+            }, 1000);
+
             animation.addEventListener('complete', () => {
                 animation.removeEventListener('complete');
                 if (countdownClassRef.current && animationRef.current) {
-                    countdownClassRef.current.className = "countdown popup-exit";
+                    countdownClassRef.current.className = "countdown popup-exit popup-exit-active";
                     animationRef.current.className = "interval fade-exit fade-exit-active";
                     setTimeout(() => Props.PageChanger("Play"), 230);
                 }
             });
+        }
+    }
+
+    const triggerExit = () => {
+        if (animationRef.current) {
+            animationRef.current.className = "interval fade-exit fade-exit-active";
+            setTimeout(() => Props.PageChanger("GameStart"), 230);
         }
     }
 
@@ -154,7 +165,7 @@ const Scoreboard = (Props: Props) => {
                             </div>
                         </div>
                         <div className="actions">
-                            <button className="buttonBlue">EXIT</button>
+                            <button className="buttonBlue" onClick={triggerExit}>EXIT</button>
                             <button className="buttonYellow" id="interactionButton" onClick={triggerCountdown}>!CONTINUE</button>
                         </div>
                     </div>
