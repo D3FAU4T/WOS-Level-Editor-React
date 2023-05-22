@@ -4,10 +4,18 @@ import GoalBar from '../Components/GoalBar';
 import Topbar from '../Components/Topbar';
 import { LevelData, Slot } from '../Interfaces/LevelData';
 import Letters from '../Components/Letters';
-import { calculateStars, getCountOfFoundedWords, getCurrentPoints, getTotalPoints, getTotalWordsOfTheLevel, getWordsOfTheLevel, makePassingPoints } from '../Components/Functions';
 import Fantastic from '../Components/Fantastic';
 import CreateColumn from '../Components/CreateColumn';
 import LanguageSetting from '../Components/LanguageSetting';
+import {
+    calculateStars,
+    getCountOfFoundedWords,
+    getCurrentPoints,
+    getTotalPoints,
+    getTotalWordsOfTheLevel,
+    getWordsOfTheLevel,
+    makePassingPoints
+} from '../Components/Functions';
 
 type Props = {
     MetaData: LevelData;
@@ -52,12 +60,12 @@ const Play = (Props: Props) => {
     // }
 
     useEffect(() => {
-        resize();
-        window.addEventListener('resize', resize);
-
         setTimeout(() => {
             setLevelFinished(true);
         }, 3000)
+
+        resize();
+        window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
     }, []);
 
