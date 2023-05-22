@@ -1,5 +1,5 @@
 import '../CSS/Editor.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import GoalBar from '../Components/GoalBar';
 import Topbar from '../Components/Topbar';
 import { LevelData, Slot } from '../Interfaces/LevelData';
@@ -34,18 +34,19 @@ const Play = (Props: Props) => {
     const [levelFinished, setLevelFinished] = useState<boolean>(false);
     const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
 
+    const contentTop = useRef<HTMLDivElement>(null);
+
     const resize = () => {
-        const contentTop = document.getElementById("contentTop");
         const fantastic = document.getElementById("Fantastic");
 
-        if (contentTop && fantastic) {
-            const maxWidth = contentTop.clientWidth;
-            const maxHeight = contentTop.clientHeight;
+        if (contentTop.current && fantastic) {
+            const maxWidth = contentTop.current.clientWidth;
+            const maxHeight = contentTop.current.clientHeight;
             const width = window.innerWidth;
             const height = window.innerHeight;
             const isMax = width >= maxWidth! && height >= maxHeight!;
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
-            contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            contentTop.current.style.transform = isMax ? '' : 'scale(' + scale + ')';
             fantastic.style.transform = isMax ? '' : 'scale(' + scale + ')';
         }
     }
@@ -77,7 +78,7 @@ const Play = (Props: Props) => {
     return (
         <div>
             <div id="root1">
-                <div id="contentTop" style={{ transform: "scale(0.3)" }}>
+                <div style={{ transform: "scale(0.3)" }} ref={contentTop}>
                     <div className="content">
                         <div className="room fade-enter fade-enter-active">
                             <header>
