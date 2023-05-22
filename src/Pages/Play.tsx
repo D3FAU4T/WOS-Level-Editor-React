@@ -23,8 +23,9 @@ type Props = {
     setMetaData: React.Dispatch<React.SetStateAction<LevelData>>;
     PageChanger: (page: string) => void;
     TopbarData: {
-        username: string;
+        guesser: string;
         word: string;
+        mode: "Hit" | "No Hit" | "Completed" | "1 fake" | "1 fake & 1 hidden" | "2 fakes & 1 hidden" | "2 fakes & 2 hidden" | "2 fakes & 3 hidden" | "hidden";
     }
 }
 
@@ -83,7 +84,7 @@ const Play = (Props: Props) => {
                                 <span className="wos"></span>
                                 <div className="word" id="topbarWordHit">
                                     <div className="contentFeedback">
-                                        <Topbar Mode='No Hit' Username={Props.TopbarData.username} Word={Props.TopbarData.word} />
+                                        <Topbar Mode={Props.TopbarData.mode} Username={Props.TopbarData.guesser} Word={Props.TopbarData.word} />
                                     </div>
                                     <div className="contentAnagram">
                                         <div>

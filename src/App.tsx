@@ -45,8 +45,12 @@ const level: LevelData = {
 export default function App() {
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
-  const [topbardata, setTopbardata] = useState({
-    username: "System",
+  const [topbardata, setTopbardata] = useState<{
+    guesser: string,
+    word: string,
+    mode: "Hit" | "No Hit" | "Completed" | "1 fake" | "1 fake & 1 hidden" | "2 fakes & 1 hidden" | "2 fakes & 2 hidden" | "2 fakes & 3 hidden" | "hidden"
+  }>({
+    guesser: "System",
     word: "WOS",
     mode: 'No Hit'
   });
