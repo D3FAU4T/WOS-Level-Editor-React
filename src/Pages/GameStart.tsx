@@ -40,7 +40,7 @@ const GameStart = (Props: Props) => {
     }
 
     const startGame = () => {
-        Props.Socket.emit('startGame');
+        Props.Socket.emit("startGame");
         setCountdownHidden(false);
 
         if (countdownRef.current) {

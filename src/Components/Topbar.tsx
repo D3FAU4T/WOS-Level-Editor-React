@@ -1,10 +1,13 @@
 import React from "react";
+import { TopbarMode } from "../Interfaces/LevelData";
 
 type Props = {
-    Mode: "Hit" | "No Hit" | "Completed" | "1 fake" | "1 fake & 1 hidden" | "2 fakes & 1 hidden" | "2 fakes & 2 hidden" | "2 fakes & 3 hidden" | "hidden";
     Blink?: boolean;
-    Username: string;
-    Word: string;
+    TopBarData: {
+        guesser: string,
+        word: string,
+        mode: TopbarMode,
+    }
 }
 
 const Topbar = (Props: Props) => {
@@ -12,10 +15,10 @@ const Topbar = (Props: Props) => {
     const hit: JSX.Element = (
         <div className="hit">
             <div>
-                <span className="nick">{Props.Username.toUpperCase()} </span>
+                <span className="nick">{Props.TopBarData.guesser.toUpperCase()} </span>
                 <span>FOUND</span>
             </div>
-            <p>"{Props.Word}"</p>
+            <p>"{Props.TopBarData.word.toUpperCase()}"</p>
         </div>
     );
 
@@ -81,14 +84,14 @@ const Topbar = (Props: Props) => {
     return (
         <div className="contentFeedback" id="topbar">
             {
-                Props.Mode === "No Hit" ? noHit :
-                    Props.Mode === "Completed" ? completed :
-                        Props.Mode === "1 fake" ? oneFake :
-                            Props.Mode === "1 fake & 1 hidden" ? oneFakeAndOneHidden :
-                                Props.Mode === "2 fakes & 1 hidden" ? twoFakesAndOneHidden :
-                                    Props.Mode === "2 fakes & 2 hidden" ? twoFakesAndTwoHidden :
-                                        Props.Mode === "2 fakes & 3 hidden" ? twoFakesAndThreeHidden :
-                                            Props.Mode === "Hit" ? hit :
+                Props.TopBarData.mode === "Hit" ? hit :
+                    Props.TopBarData.mode === "No Hit" ? noHit :
+                        Props.TopBarData.mode === "Completed" ? completed :
+                            Props.TopBarData.mode === "1 fake" ? oneFake :
+                                Props.TopBarData.mode === "1 fake & 1 hidden" ? oneFakeAndOneHidden :
+                                    Props.TopBarData.mode === "2 fakes & 1 hidden" ? twoFakesAndOneHidden :
+                                        Props.TopBarData.mode === "2 fakes & 2 hidden" ? twoFakesAndTwoHidden :
+                                            Props.TopBarData.mode === "2 fakes & 3 hidden" ? twoFakesAndThreeHidden :
                                                 hidden
             }
         </div>

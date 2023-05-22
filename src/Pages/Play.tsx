@@ -1,8 +1,8 @@
 import '../CSS/Editor.css';
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import GoalBar from '../Components/GoalBar';
 import Topbar from '../Components/Topbar';
-import { LevelData, Slot } from '../Interfaces/LevelData';
+import { LevelData, Slot, TopbarMode } from '../Interfaces/LevelData';
 import Letters from '../Components/Letters';
 import Fantastic from '../Components/Fantastic';
 import CreateColumn from '../Components/CreateColumn';
@@ -16,37 +16,35 @@ import {
     getWordsOfTheLevel,
     makePassingPoints
 } from '../Components/Functions';
-import Timebar from '../Components/Timebar';
 
 type Props = {
     MetaData: LevelData;
-    setMetaData: React.Dispatch<React.SetStateAction<LevelData>>;
+    LevelFinished: boolean;
     PageChanger: (page: string) => void;
-    TopbarData: {
-        guesser: string;
-        word: string;
-        mode: "Hit" | "No Hit" | "Completed" | "1 fake" | "1 fake & 1 hidden" | "2 fakes & 1 hidden" | "2 fakes & 2 hidden" | "2 fakes & 3 hidden" | "hidden";
-    }
+    SetLevelData: React.Dispatch<React.SetStateAction<LevelData>>;
+    TopBarData: {
+        guesser: string,
+        word: string,
+        mode: TopbarMode,
+    };
 }
 
 const Play = (Props: Props) => {
-
-    const [levelFinished, setLevelFinished] = useState<boolean>(false);
+    
     const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
 
-    const contentTop = useRef<HTMLDivElement>(null);
-
     const resize = () => {
+        const contentTop = document.getElementById("contentTop");
         const fantastic = document.getElementById("Fantastic");
 
-        if (contentTop.current && fantastic) {
-            const maxWidth = contentTop.current.clientWidth;
-            const maxHeight = contentTop.current.clientHeight;
+        if (contentTop && fantastic) {
+            const maxWidth = contentTop.clientWidth;
+            const maxHeight = contentTop.clientHeight;
             const width = window.innerWidth;
             const height = window.innerHeight;
             const isMax = width >= maxWidth! && height >= maxHeight!;
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
-            contentTop.current.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
             fantastic.style.transform = isMax ? '' : 'scale(' + scale + ')';
         }
     }
@@ -58,7 +56,7 @@ const Play = (Props: Props) => {
             if (slot) slot.locked = state;
         });
 
-        Props.setMetaData({ ...Props.MetaData });
+        Props.SetLevelData({ ...Props.MetaData });
     }
 
     // SYNCING WORDS PART
@@ -67,9 +65,11 @@ const Play = (Props: Props) => {
     //     else Props.ChangeSyncState(null);
     // }
 
-    //setLevelFinished(true);
+    useEffect(() => {
+        // setTimeout(() => {
+        //     setLevelFinished(true);
+        // }, 3000)
 
-    useEffect(() => {        
         resize();
         window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
@@ -78,14 +78,14 @@ const Play = (Props: Props) => {
     return (
         <div>
             <div id="root1">
-                <div style={{ transform: "scale(0.3)" }} ref={contentTop}>
+                <div id="contentTop" style={{ transform: "scale(0.3)" }}>
                     <div className="content">
                         <div className="room fade-enter fade-enter-active">
                             <header>
                                 <span className="wos"></span>
                                 <div className="word" id="topbarWordHit">
                                     <div className="contentFeedback">
-                                        <Topbar Mode={Props.TopbarData.mode} Username={Props.TopbarData.guesser} Word={Props.TopbarData.word} />
+                                        <Topbar TopBarData={Props.TopBarData} />
                                     </div>
                                     <div className="contentAnagram">
                                         <div>
@@ -120,13 +120,14 @@ const Play = (Props: Props) => {
                             <div className="middle">
                                 <div className="time" id="syncTimerExit">
                                     <i className="icon"></i>
-                                    <Timebar
-                                        TimePercentage={Props.MetaData.timebar.timerPercentage}
-                                        TotalLocks={Props.MetaData.timebar.locks.total}
-                                        ExpiredLocks={Props.MetaData.timebar.locks.expired}
-                                        TransitionDuration="117000ms"
-                                    />
-                                    {/* Original --> TransitionDuration="117000ms" */}
+                                    <div id="timebar">
+                                        <span className="" style={{ width: "100%", transitionDuration: "117000ms" }} id="timebarPercentage"></span>
+                                        <div className="mark" style={{ left: "12%" }}></div>
+                                        <div className="mark" style={{ left: "28%" }}></div>
+                                        <div className="mark" style={{ left: "45%" }}></div>
+                                        <div className="mark" style={{ left: "62%" }}></div>
+                                        <div className="mark" style={{ left: "78%" }}></div>
+                                    </div>
                                 </div>
                                 <div className="answer" id="answerslots">
                                     <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
@@ -138,7 +139,7 @@ const Play = (Props: Props) => {
                     </div>
                     <div className="qrcode">
                         <span>
-                            <button className="copyToClipboard" id="copyToClipboard">HALLE LUJAH</button>
+                            <button className="copyToClipboard" id="copyToClipboard">Copy to clipboard</button>
                         </span>
                         <i></i>
                         <div>
@@ -172,7 +173,7 @@ const Play = (Props: Props) => {
                 {/* <!-- New Language Button --> */}
                 <LanguageSetting ChangeSyncState={setSyncingText} />
                 <Fantastic
-                    Hidden={!levelFinished}
+                    Hidden={!Props.LevelFinished}
                     TotalWords={getTotalWordsOfTheLevel(Props.MetaData)}
                     CurrentLevel={parseInt(Props.MetaData.level)}
                     FoundedWords={getCountOfFoundedWords(Props.MetaData)}
@@ -190,4 +191,4 @@ const Play = (Props: Props) => {
     );
 }
 
-export default Play;
+export default memo(Play);

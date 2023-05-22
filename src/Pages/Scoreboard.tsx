@@ -3,12 +3,16 @@ import React, { useEffect, useRef, useState } from "react";
 import lottie from 'lottie-web';
 import animationData from '../Animations/fantastic.json';
 import contagem from "../Animations/contagem.json";
+import { Socket } from 'socket.io-client';
 
 type Props = {
     CurrentLevel: number;
     UpNext: number;
-    LevelRanking: { [key: string]: number };
+    LevelRanking: { [username: string]: number };
+    TotalRanking: { [username: string]: number };
     PageChanger: (page: string) => void;
+    SetLevelFinished: React.Dispatch<React.SetStateAction<boolean>>;
+    Socket: Socket;
 }
 
 const Scoreboard = (Props: Props) => {
@@ -53,6 +57,7 @@ const Scoreboard = (Props: Props) => {
     }
 
     useEffect(() => {
+        Props.SetLevelFinished(false);
         resize();
         window.addEventListener('resize', resize);
 
@@ -76,6 +81,7 @@ const Scoreboard = (Props: Props) => {
     }, []);
 
     const triggerCountdown = () => {
+        Props.Socket.emit("continue");
         setCountdownHidden(false);
 
         if (countdownRef.current) {
@@ -154,7 +160,7 @@ const Scoreboard = (Props: Props) => {
                                     <div className="scroll">
                                         <div className="scrollElements">
                                             <ul id="TotalRanking">
-                                                {getScoreJSX(Props.LevelRanking)}
+                                                {getScoreJSX(Props.TotalRanking)}
                                             </ul>
                                         </div>
                                         <div className="scrollBar">

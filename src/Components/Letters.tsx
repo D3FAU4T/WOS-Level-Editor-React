@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { wordPoint, shuffler, normalizeLetter } from "./Functions";
 
 type Props = {
@@ -96,4 +96,4 @@ const Letters = (Props: Props) => {
     );
 }
 
-export default Letters;
+export default memo(Letters);

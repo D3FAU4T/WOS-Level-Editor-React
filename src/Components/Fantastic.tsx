@@ -12,11 +12,10 @@ type Props = {
 }
 
 const Fantastic = (Props: Props) => {
-    if (Props.Hidden) return null;
     const containerRef = React.useRef<HTMLDivElement>(null);
     const fantasticClassRef = React.useRef<HTMLDivElement>(null);
 
-    if (containerRef.current) {        
+    if (!Props.Hidden && containerRef.current) {
         setTimeout(() => {
             const animation = lottie.loadAnimation({
                 container: containerRef.current!,

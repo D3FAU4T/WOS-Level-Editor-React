@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Play from './Pages/Play';
 import Editor from './Pages/Editor';
 import Scoreboard from './Pages/Scoreboard';
-import { LevelData } from './Interfaces/LevelData';
+import { LevelData, TopbarMode } from './Interfaces/LevelData';
 import { extractScore } from './Components/Functions';
 import GameStart from './Pages/GameStart';
-import { io } from 'socket.io-client';
+import io from 'socket.io-client';
 
 const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
   transports: ["websocket"]
@@ -45,19 +45,59 @@ const level: LevelData = {
 export default function App() {
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
-  const [topbardata, setTopbardata] = useState<{
-    guesser: string,
-    word: string,
-    mode: "Hit" | "No Hit" | "Completed" | "1 fake" | "1 fake & 1 hidden" | "2 fakes & 1 hidden" | "2 fakes & 2 hidden" | "2 fakes & 3 hidden" | "hidden"
+  const [levelFinished, setLevelFinished] = useState<boolean>(false);
+  const [scoreboardData, setScoreboardData] = useState<{
+    Level: number;
+    LevelRanking: { [username: string]: number };
+    Streamer: string;
+    TotalRanking: { [username: string]: number };
+    UpNext: number;
+  }>({
+    Level: 1,
+    LevelRanking: {},
+    Streamer: "",
+    TotalRanking: {},
+    UpNext: 2,
+  });
+
+  const [topbarData, setTopbardata] = useState<{
+    guesser: string;
+    word: string;
+    mode: TopbarMode;
   }>({
     guesser: "System",
     word: "WOS",
-    mode: 'No Hit'
+    mode: "No Hit",
   });
 
+
+  function updateSlotContent(boardObj: LevelData, word: string) {
+    const columns = [boardObj.column1, boardObj.column2, boardObj.column3];
+  
+    columns.forEach(column => {
+      column.forEach(obj => {
+        const slotElement = document.querySelector(`#OurSlot${obj.index}`);
+        const nickElement = document.querySelector(`#OurSlot${obj.index} .nick`);
+        const letters = obj.word.split('');
+  
+        if (letters.includes('?') || obj.word != word) return;
+        slotElement!.classList.add('hit');
+        slotElement!.classList.add('expired');
+        nickElement!.textContent = obj.username;
+        const letterElements = document.querySelectorAll(`#OurSlot${obj.index} .letter`);
+  
+        letters.forEach((letter, i) => {
+          if (letterElements[i]) {
+            letterElements[i].innerHTML = `<span>${letter}</span>`;
+          }
+        });
+      });
+    });
+  }
+
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log('Socket connected: ', socket.id)
+    socket.on('connect', () => {
+      console.log("Connected to server: ", socket.id);
     });
 
     socket.on('handshake', data => {
@@ -71,12 +111,13 @@ export default function App() {
 
     socket.on('guess', (board, topbarData, scoreboardData) => {
       setLevelData(board);
+      updateSlotContent(board, topbarData.word);
       setTopbardata(topbarData);
-      console.log(scoreboardData)
+      setScoreboardData(scoreboardData);
     });
 
     socket.on('triggerScoreboard', () => {
-      console.log('Level end triggered')
+      setLevelFinished(true);
     });
 
     return () => {
@@ -92,9 +133,9 @@ export default function App() {
     <main>
       {
         page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
-          page === "Play" ? <Play MetaData={levelData} setMetaData={setLevelData} PageChanger={setPage} TopbarData={topbardata} /> :
+          page === "Play" ? <Play SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
-              page === "Scoreboard" ? <Scoreboard LevelRanking={extractScore(level)} CurrentLevel={parseInt(level.level)} UpNext={parseInt(level.level) + 3} PageChanger={setPage} /> :
+              page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={scoreboardData.TotalRanking} LevelRanking={scoreboardData.LevelRanking} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
                 null
       }
     </main>
