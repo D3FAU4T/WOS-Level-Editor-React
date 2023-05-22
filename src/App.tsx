@@ -5,6 +5,9 @@ import Scoreboard from './Pages/Scoreboard';
 import { LevelData } from './Interfaces/LevelData';
 import { extractScore } from './Components/Functions';
 import GameStart from './Pages/GameStart';
+import io from 'socket.io-client';
+
+const socket = io('http://https://wos-level-editor.d3fau4tbot.repl.co:6969');
 
 const level: LevelData = {
   "lang": "English",
