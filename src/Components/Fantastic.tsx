@@ -13,6 +13,7 @@ type Props = {
 
 const Fantastic = (Props: Props) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
+    const fantasticClassRef = React.useRef<HTMLDivElement>(null);
 
     if (containerRef.current) {        
         setTimeout(() => {
@@ -24,12 +25,17 @@ const Fantastic = (Props: Props) => {
                 animationData,
             });
 
+            setTimeout(() => {
+                fantasticClassRef.current!.className = "popup wdone popup-enter-done";
+            }, 1000);
+
             animation.addEventListener('drawnFrame', (event) => {
                 if (event.currentTime > (Props.SkippedLevels === 1 ? 20 : Props.SkippedLevels === 2 ? 39 : 58)) {
                     animation.pause();
                     animation.removeEventListener('drawnFrame');
                     setTimeout(() => {
-                        Props.PageChanger("Scoreboard");
+                        fantasticClassRef.current!.className = "popup wdone popup-exit popup-exit-active";
+                        setTimeout(() => Props.PageChanger("Scoreboard"), 330);
                     }, 3000)
                 }
             });
@@ -39,7 +45,7 @@ const Fantastic = (Props: Props) => {
 
     return (
         <div>
-            <div className="popup wdone popup-enter popup-enter-active" hidden={Props.Hidden}>
+            <div className="popup wdone popup-enter popup-enter-active" hidden={Props.Hidden} ref={fantasticClassRef}>
                 <div className="brilho"></div>
                 <div className="contentPopup" style={{ transform: "scale(0.234405)" }} id="Fantastic">
                     <div className="welldone">
