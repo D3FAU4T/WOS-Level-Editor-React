@@ -22,6 +22,10 @@ type Props = {
     MetaData: LevelData;
     setMetaData: React.Dispatch<React.SetStateAction<LevelData>>;
     PageChanger: (page: string) => void;
+    TopbarData: {
+        username: string;
+        word: string;
+    }
 }
 
 const Play = (Props: Props) => {
@@ -79,7 +83,7 @@ const Play = (Props: Props) => {
                                 <span className="wos"></span>
                                 <div className="word" id="topbarWordHit">
                                     <div className="contentFeedback">
-                                        <Topbar Mode='No Hit' />
+                                        <Topbar Mode='No Hit' Username={Props.TopbarData.username} Word={Props.TopbarData.word} />
                                     </div>
                                     <div className="contentAnagram">
                                         <div>
@@ -132,7 +136,7 @@ const Play = (Props: Props) => {
                     </div>
                     <div className="qrcode">
                         <span>
-                            <button className="copyToClipboard" id="copyToClipboard">HALLELUJAH</button>
+                            <button className="copyToClipboard" id="copyToClipboard">HALLE LUJAH</button>
                         </span>
                         <i></i>
                         <div>

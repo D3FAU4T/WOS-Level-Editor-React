@@ -45,6 +45,11 @@ const level: LevelData = {
 export default function App() {
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
+  const [topbardata, setTopbardata] = useState({
+    username: "System",
+    word: "WOS",
+    mode: 'No Hit'
+  });
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -60,10 +65,22 @@ export default function App() {
       setLevelData(data);
     });
 
+    socket.on('guess', (board, topbarData, scoreboardData) => {
+      setLevelData(board);
+      setTopbardata(topbarData);
+      console.log(scoreboardData)
+    });
+
+    socket.on('triggerScoreboard', () => {
+      console.log('Level end triggered')
+    });
+
     return () => {
       socket.off('connect');
       socket.off('handshake');
       socket.off('newLevel');
+      socket.off('guess');
+      socket.off('triggerScoreboard');
     }
   }, [])
 
@@ -71,7 +88,7 @@ export default function App() {
     <main>
       {
         page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
-          page === "Play" ? <Play MetaData={levelData} setMetaData={setLevelData} PageChanger={setPage} /> :
+          page === "Play" ? <Play MetaData={levelData} setMetaData={setLevelData} PageChanger={setPage} TopbarData={topbardata} /> :
             page === "Editor" ? <Editor /> :
               page === "Scoreboard" ? <Scoreboard LevelRanking={extractScore(level)} CurrentLevel={parseInt(level.level)} UpNext={parseInt(level.level) + 3} PageChanger={setPage} /> :
                 null
