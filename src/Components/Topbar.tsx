@@ -13,7 +13,7 @@ type Props = {
 const Topbar = (Props: Props) => {
 
     const hit: JSX.Element = (
-        <div className="hit">
+        <div className="hit feedback-enter feedback-enter-active">
             <div>
                 <span className="nick">{Props.TopBarData.guesser.toUpperCase()} </span>
                 <span>FOUND</span>

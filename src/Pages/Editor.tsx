@@ -6,7 +6,7 @@ import Setting from '../Components/Setting';
 import { LevelData, Slot } from '../Interfaces/LevelData';
 import Timebar from '../Components/Timebar';
 import GoalBar from '../Components/GoalBar';
-import { 
+import {
     getCountOfFoundedWords,
     getCurrentPoints,
     getTotalPoints,
@@ -89,7 +89,7 @@ const Editor = () => {
     }
 
     const updateSlotLock = (state: boolean, index: number) => {
-        (["column1", "column2", "column3"] as unknown as [keyof typeof json]).forEach((column) => {            
+        (["column1", "column2", "column3"] as unknown as [keyof typeof json]).forEach((column) => {
             const columnData = json[column] as Slot[];
             const slot = columnData.find((slot) => slot.index === index);
             if (slot) slot.locked = state;
@@ -112,7 +112,11 @@ const Editor = () => {
                             <header>
                                 <span className="wos"></span>
                                 <div className="word">
-                                    <Topbar Mode='Completed' Blink />
+                                    <Topbar TopBarData={{
+                                        guesser: "Guesser",
+                                        word: "Word",
+                                        mode: 'Completed'
+                                    }} Blink />
                                     <div className="contentAnagram">
                                         <div>
                                             <div className="lastHits" id="syncingTxt">{syncingText}</div>
@@ -144,18 +148,16 @@ const Editor = () => {
                                 </div>
                             </header>
                             <div className="middle">
-                                <div className="time">
-                                    <i className="icon"></i>
-                                    <Timebar
-                                        TimePercentage={json.timebar.timerPercentage}
-                                        TotalLocks={json.timebar.locks.total}
-                                        ExpiredLocks={json.timebar.locks.expired}
-                                        TransitionDuration="0ms"
-                                    />
-                                    {/* Original --> TransitionDuration="117000ms" */}
-                                </div>
+                                {/* <Timebar
+                                    TimePercentage={json.timebar.timerPercentage}
+                                    TotalLocks={json.timebar.locks.total}
+                                    ExpiredLocks={json.timebar.locks.expired}
+                                    SyncLettersSetter={setSyncingText}
+                                    TransitionDuration="0ms"
+                                /> */}
+                                {/* Original --> TransitionDuration="117000ms" */}
                                 <div className="answer" id="answerslots">
-                                    <CreateColumn MetaData={json} Column={json.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock}/>
+                                    <CreateColumn MetaData={json} Column={json.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
                                     <CreateColumn MetaData={json} Column={json.column2} StartingIndex={json.column1.length} SlotLockUpdater={updateSlotLock} />
                                     <CreateColumn MetaData={json} Column={json.column3} StartingIndex={json.column1.length + json.column2.length} SlotLockUpdater={updateSlotLock} />
                                 </div>

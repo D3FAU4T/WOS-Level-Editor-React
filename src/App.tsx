@@ -133,7 +133,7 @@ export default function App() {
     <main>
       {
         page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
-          page === "Play" ? <Play SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
+          page === "Play" ? <Play SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
               page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={scoreboardData.TotalRanking} LevelRanking={scoreboardData.LevelRanking} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
                 null

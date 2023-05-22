@@ -16,10 +16,12 @@ import {
     getWordsOfTheLevel,
     makePassingPoints
 } from '../Components/Functions';
+import Timebar from '../Components/Timebar';
 
 type Props = {
     MetaData: LevelData;
     LevelFinished: boolean;
+    SetLevelFinished: React.Dispatch<React.SetStateAction<boolean>>;
     PageChanger: (page: string) => void;
     SetLevelData: React.Dispatch<React.SetStateAction<LevelData>>;
     TopBarData: {
@@ -30,7 +32,7 @@ type Props = {
 }
 
 const Play = (Props: Props) => {
-    
+
     const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
 
     const resize = () => {
@@ -66,10 +68,6 @@ const Play = (Props: Props) => {
     // }
 
     useEffect(() => {
-        // setTimeout(() => {
-        //     setLevelFinished(true);
-        // }, 3000)
-
         resize();
         window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
@@ -118,17 +116,14 @@ const Play = (Props: Props) => {
                                 </div>
                             </header>
                             <div className="middle">
-                                <div className="time" id="syncTimerExit">
-                                    <i className="icon"></i>
-                                    <div id="timebar">
-                                        <span className="" style={{ width: "100%", transitionDuration: "117000ms" }} id="timebarPercentage"></span>
-                                        <div className="mark" style={{ left: "12%" }}></div>
-                                        <div className="mark" style={{ left: "28%" }}></div>
-                                        <div className="mark" style={{ left: "45%" }}></div>
-                                        <div className="mark" style={{ left: "62%" }}></div>
-                                        <div className="mark" style={{ left: "78%" }}></div>
-                                    </div>
-                                </div>
+                                <Timebar
+                                    TimePercentage={Props.MetaData.timebar.timerPercentage}
+                                    TotalLocks={Props.MetaData.timebar.locks.total}
+                                    ExpiredLocks={Props.MetaData.timebar.locks.expired}
+                                    SyncLettersSetter={setSyncingText}
+                                    LevelFinished={Props.SetLevelFinished}
+                                    TransitionDuration='117000ms'
+                                />
                                 <div className="answer" id="answerslots">
                                     <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
                                     <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column2} StartingIndex={Props.MetaData.column1.length} SlotLockUpdater={updateSlotLock} />
@@ -191,4 +186,4 @@ const Play = (Props: Props) => {
     );
 }
 
-export default memo(Play);
+export default Play;
