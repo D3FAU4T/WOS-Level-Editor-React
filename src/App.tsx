@@ -5,9 +5,19 @@ import Scoreboard from './Pages/Scoreboard';
 import { LevelData } from './Interfaces/LevelData';
 import { extractScore } from './Components/Functions';
 import GameStart from './Pages/GameStart';
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-const socket = io('http://https://wos-level-editor.d3fau4tbot.repl.co:6969');
+const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
+  transports: [ "websocket" ]
+});
+
+socket.on("connect", () => {
+  console.log('Socket connected: ', socket.id)
+});
+
+socket.on('handshake', data => {
+  console.log(data)
+})
 
 const level: LevelData = {
   "lang": "English",
