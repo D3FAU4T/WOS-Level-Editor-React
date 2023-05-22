@@ -4,6 +4,7 @@ import Editor from './Pages/Editor';
 import Scoreboard from './Pages/Scoreboard';
 import { LevelData } from './Interfaces/LevelData';
 import { extractScore } from './Components/Functions';
+import GameStart from './Pages/GameStart';
 
 const level: LevelData = {
   "lang": "English",
@@ -37,14 +38,16 @@ const level: LevelData = {
 }
 
 export default function App() {
-  const [page, setPage] = useState("Play");
+  const [page, setPage] = useState("GameStart");
 
   return (
     <main>
       {
-        page === "Play" ? <Play MetaData={level} PageChanger={setPage} /> :
-          page === "Editor" ? <Editor /> :
-            page === "Scoreboard" ? <Scoreboard LevelRanking={extractScore(level)} CurrentLevel={parseInt(level.level)} UpNext={parseInt(level.level) + 3} PageChanger={setPage} /> : null
+        page === "GameStart" ? <GameStart PageChanger={setPage} /> :
+          page === "Play" ? <Play MetaData={level} PageChanger={setPage} /> :
+            page === "Editor" ? <Editor /> :
+              page === "Scoreboard" ? <Scoreboard LevelRanking={extractScore(level)} CurrentLevel={parseInt(level.level)} UpNext={parseInt(level.level) + 3} PageChanger={setPage} /> :
+                null
       }
     </main>
   )
