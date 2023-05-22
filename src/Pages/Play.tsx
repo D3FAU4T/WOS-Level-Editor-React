@@ -19,12 +19,12 @@ import {
 
 type Props = {
     MetaData: LevelData;
+    setMetaData: React.Dispatch<React.SetStateAction<LevelData>>;
     PageChanger: (page: string) => void;
 }
 
 const Play = (Props: Props) => {
 
-    const [json, setJson] = useState<LevelData>(Props.MetaData);
     const [levelFinished, setLevelFinished] = useState<boolean>(false);
     const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
 
@@ -45,12 +45,13 @@ const Play = (Props: Props) => {
     }
 
     const updateSlotLock = (state: boolean, index: number) => {
-        (["column1", "column2", "column3"] as unknown as [keyof typeof json]).forEach((column) => {
-            const columnData = json[column] as Slot[];
+        (["column1", "column2", "column3"] as unknown as [keyof typeof Props.MetaData]).forEach((column) => {
+            const columnData = Props.MetaData[column] as Slot[];
             const slot = columnData.find((slot) => slot.index === index);
             if (slot) slot.locked = state;
         });
-        setJson({ ...json });
+
+        Props.setMetaData({ ...Props.MetaData });
     }
 
     // SYNCING WORDS PART
@@ -87,10 +88,10 @@ const Play = (Props: Props) => {
                                             <div className={`containerLetters${syncingText === null ? "" : " lettersExit"}`} id="syncSetter">
                                                 <p id="formWords">FORM WORDS WITH THE LETTERS BELOW</p>
                                                 <Letters
-                                                    Letters={getWordsOfTheLevel(json).split(' ').pop()!.replace(/\?/g, '')}
-                                                    FakeLetters={json.fakeLetters}
-                                                    HiddenLetters={json.hiddenLetters}
-                                                    Reveal={json.reveal}
+                                                    Letters={getWordsOfTheLevel(Props.MetaData).split(' ').pop()!.replace(/\?/g, '')}
+                                                    FakeLetters={Props.MetaData.fakeLetters}
+                                                    HiddenLetters={Props.MetaData.hiddenLetters}
+                                                    Reveal={Props.MetaData.reveal}
                                                 />
                                             </div>
                                         </div>
@@ -98,11 +99,11 @@ const Play = (Props: Props) => {
                                 </div>
                                 <div className="actionsHeader alignRight">
                                     <GoalBar
-                                        CurrentPoints={getCurrentPoints(json)}
-                                        FoundedWords={getCountOfFoundedWords(json) + 1}
-                                        TotalWords={getTotalWordsOfTheLevel(json)}
-                                        Goal={makePassingPoints(json, getTotalPoints(json))}
-                                        MetaData={json}
+                                        CurrentPoints={getCurrentPoints(Props.MetaData)}
+                                        FoundedWords={getCountOfFoundedWords(Props.MetaData) + 1}
+                                        TotalWords={getTotalWordsOfTheLevel(Props.MetaData)}
+                                        Goal={makePassingPoints(Props.MetaData, getTotalPoints(Props.MetaData))}
+                                        MetaData={Props.MetaData}
                                     />
                                     <div style={{ color: "#782cca" }}>aa</div>
                                     <div className="exitSound">
@@ -124,9 +125,9 @@ const Play = (Props: Props) => {
                                     </div>
                                 </div>
                                 <div className="answer" id="answerslots">
-                                    <CreateColumn MetaData={json} Column={json.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
-                                    <CreateColumn MetaData={json} Column={json.column2} StartingIndex={json.column1.length} SlotLockUpdater={updateSlotLock} />
-                                    <CreateColumn MetaData={json} Column={json.column3} StartingIndex={json.column1.length + json.column2.length} SlotLockUpdater={updateSlotLock} />
+                                    <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
+                                    <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column2} StartingIndex={Props.MetaData.column1.length} SlotLockUpdater={updateSlotLock} />
+                                    <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column3} StartingIndex={Props.MetaData.column1.length + Props.MetaData.column2.length} SlotLockUpdater={updateSlotLock} />
                                 </div>
                             </div>
                         </div>
@@ -168,15 +169,15 @@ const Play = (Props: Props) => {
                 <LanguageSetting ChangeSyncState={setSyncingText} />
                 <Fantastic
                     Hidden={!levelFinished}
-                    TotalWords={getTotalWordsOfTheLevel(json)}
-                    CurrentLevel={parseInt(json.level)}
-                    FoundedWords={getCountOfFoundedWords(json)}
+                    TotalWords={getTotalWordsOfTheLevel(Props.MetaData)}
+                    CurrentLevel={parseInt(Props.MetaData.level)}
+                    FoundedWords={getCountOfFoundedWords(Props.MetaData)}
                     PageChanger={Props.PageChanger}
                     SkippedLevels={
                         calculateStars(
-                            getTotalPoints(json),
-                            getCurrentPoints(json),
-                            parseInt(json.level)
+                            getTotalPoints(Props.MetaData),
+                            getCurrentPoints(Props.MetaData),
+                            parseInt(Props.MetaData.level)
                         )
                     }
                 />

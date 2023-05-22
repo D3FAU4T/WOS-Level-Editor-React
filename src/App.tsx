@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Play from './Pages/Play';
 import Editor from './Pages/Editor';
 import Scoreboard from './Pages/Scoreboard';
@@ -8,16 +8,8 @@ import GameStart from './Pages/GameStart';
 import { io } from 'socket.io-client';
 
 const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
-  transports: [ "websocket" ]
+  transports: ["websocket"]
 });
-
-socket.on("connect", () => {
-  console.log('Socket connected: ', socket.id)
-});
-
-socket.on('handshake', data => {
-  console.log(data)
-})
 
 const level: LevelData = {
   "lang": "English",
@@ -52,12 +44,34 @@ const level: LevelData = {
 
 export default function App() {
   const [page, setPage] = useState("GameStart");
+  const [levelData, setLevelData] = useState<LevelData>(level);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log('Socket connected: ', socket.id)
+    });
+
+    socket.on('handshake', data => {
+      console.log(data)
+      socket.emit('handshake', 'Hello from client')
+    });
+
+    socket.on('newLevel', (data) => {
+      setLevelData(data);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('handshake');
+      socket.off('newLevel');
+    }
+  }, [])
 
   return (
     <main>
       {
-        page === "GameStart" ? <GameStart PageChanger={setPage} /> :
-          page === "Play" ? <Play MetaData={level} PageChanger={setPage} /> :
+        page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
+          page === "Play" ? <Play MetaData={levelData} setMetaData={setLevelData} PageChanger={setPage} /> :
             page === "Editor" ? <Editor /> :
               page === "Scoreboard" ? <Scoreboard LevelRanking={extractScore(level)} CurrentLevel={parseInt(level.level)} UpNext={parseInt(level.level) + 3} PageChanger={setPage} /> :
                 null

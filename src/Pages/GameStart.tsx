@@ -6,9 +6,11 @@ import letterJumbleAnimation from '../Animations/homeFind_en.json';
 import letterSolveAnimation from '../Animations/homeSolve_en.json';
 import letterGuessAnimation from '../Animations/lock_en.json';
 import contagem from "../Animations/contagem.json";
+import { Socket } from "socket.io-client";
 
 type Props = {
     PageChanger: (page: string) => void;
+    Socket: Socket;
 }
 
 const GameStart = (Props: Props) => {
@@ -38,6 +40,7 @@ const GameStart = (Props: Props) => {
     }
 
     const startGame = () => {
+        Props.Socket.emit('startGame');
         setCountdownHidden(false);
 
         if (countdownRef.current) {
