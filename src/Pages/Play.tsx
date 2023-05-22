@@ -16,6 +16,7 @@ import {
     getWordsOfTheLevel,
     makePassingPoints
 } from '../Components/Functions';
+import Timebar from '../Components/Timebar';
 
 type Props = {
     MetaData: LevelData;
@@ -60,11 +61,9 @@ const Play = (Props: Props) => {
     //     else Props.ChangeSyncState(null);
     // }
 
-    useEffect(() => {
-        setTimeout(() => {
-            setLevelFinished(true);
-        }, 3000)
+    //setLevelFinished(true);
 
+    useEffect(() => {        
         resize();
         window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
@@ -115,14 +114,13 @@ const Play = (Props: Props) => {
                             <div className="middle">
                                 <div className="time" id="syncTimerExit">
                                     <i className="icon"></i>
-                                    <div id="timebar">
-                                        <span className="" style={{ width: "100%", transitionDuration: "117000ms" }} id="timebarPercentage"></span>
-                                        <div className="mark" style={{ left: "12%" }}></div>
-                                        <div className="mark" style={{ left: "28%" }}></div>
-                                        <div className="mark" style={{ left: "45%" }}></div>
-                                        <div className="mark" style={{ left: "62%" }}></div>
-                                        <div className="mark" style={{ left: "78%" }}></div>
-                                    </div>
+                                    <Timebar
+                                        TimePercentage={Props.MetaData.timebar.timerPercentage}
+                                        TotalLocks={Props.MetaData.timebar.locks.total}
+                                        ExpiredLocks={Props.MetaData.timebar.locks.expired}
+                                        TransitionDuration="117000ms"
+                                    />
+                                    {/* Original --> TransitionDuration="117000ms" */}
                                 </div>
                                 <div className="answer" id="answerslots">
                                     <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
@@ -134,7 +132,7 @@ const Play = (Props: Props) => {
                     </div>
                     <div className="qrcode">
                         <span>
-                            <button className="copyToClipboard" id="copyToClipboard">Copy to clipboard</button>
+                            <button className="copyToClipboard" id="copyToClipboard">HALLELUJAH</button>
                         </span>
                         <i></i>
                         <div>
