@@ -1,5 +1,6 @@
 node_modules/
 build/
+dist/
 vite.config.js
 .replit
 replit.nix
