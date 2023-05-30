@@ -106,7 +106,15 @@ export default function App() {
     });
 
     socket.on('newLevel', (data) => {
-      setLevelData(data);
+      setLevelFinished(false);
+      const board = data
+      if (board.fakeLetters === undefined) board.fakeLetters = "";
+      setLevelData(board);
+      setTopbardata({
+        guesser: "System",
+        word: "WOS",
+        mode: "1 fake"
+      })
     });
 
     socket.on('guess', (board, topbarData, scoreboardData) => {
@@ -135,7 +143,11 @@ export default function App() {
         page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
           page === "Play" ? <Play SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
-              page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={scoreboardData.TotalRanking} LevelRanking={scoreboardData.LevelRanking} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
+              page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
+        .sort((a, b) => b[1] - a[1])
+        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} LevelRanking={Object.entries(scoreboardData.LevelRanking)
+        .sort((a, b) => b[1] - a[1])
+        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
                 null
       }
     </main>

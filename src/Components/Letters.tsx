@@ -10,8 +10,12 @@ type Props = {
 
 const Letters = (Props: Props) => {
     const letterJSX: JSX.Element[] = [];
-    const fakes = Props.FakeLetters.toUpperCase().split('');
+    const fkLetters = Props.FakeLetters === undefined ? "" : Props.FakeLetters;
+    const fakes = fkLetters.toUpperCase().split('');
     const hiddens = Props.HiddenLetters.toUpperCase().split('');
+
+    console.log(fkLetters, Props.FakeLetters, Props.HiddenLetters, Props.Letters, Props.Reveal);
+  
     const letters = shuffler((Props.Letters.toUpperCase() + Props.FakeLetters.toUpperCase()).split(''));
 
     letters.forEach((letter, index) => {
