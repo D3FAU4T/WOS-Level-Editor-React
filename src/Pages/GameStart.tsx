@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import '../CSS/Editor.css';
+import axios from "axios";
 import lottie from 'lottie-web';
-import animationData from '../Animations/logo.json';
+// import animationData from '../Animations/logo.json';
 import letterJumbleAnimation from '../Animations/homeFind_en.json';
 import letterSolveAnimation from '../Animations/homeSolve_en.json';
 import letterGuessAnimation from '../Animations/lock_en.json';
@@ -67,14 +68,15 @@ const GameStart = (Props: Props) => {
         }
     }
 
-    const loadAnimations = () => {
+    const loadAnimations = async () => {
         if (logoAnimRef.current && letterJumbleAnimRef.current && letterSolveAnimRef.current && letterGuessAnimRef.current) {
+            const { data } = await axios.get("https://wos.gg/lotties/logo.json")
             lottie.loadAnimation({
                 container: logoAnimRef.current,
                 renderer: 'svg',
                 loop: true,
                 autoplay: true,
-                animationData: animationData
+                animationData: data
             });
 
             const step0 = lottie.loadAnimation({
