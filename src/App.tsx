@@ -115,7 +115,7 @@ export default function App() {
       setTopbardata({
         guesser: "System",
         word: "WOS",
-        mode: "1 fake"
+        mode: parseInt(board.level) <= 20 ? "No Hit" : "1 fake"
       })
     });
 
