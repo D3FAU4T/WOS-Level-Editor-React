@@ -11,6 +11,7 @@ import { Socket } from "socket.io-client";
 type Props = {
     PageChanger: (page: string) => void;
     Socket: Socket;
+    Host: string;
 }
 
 const GameStart = (Props: Props) => {
@@ -149,11 +150,11 @@ const GameStart = (Props: Props) => {
                                     {/* WOS LOGO HERE */}
                                 </span>
                                 <div className="record">
-                                    <h3>d3fau4t</h3>
+                                    <h3>{Props.Host.toLowerCase()}</h3>
                                     <div className="section">
                                         <span>RECORD</span>
                                     </div>
-                                    <p className="">LEVEL 269</p>
+                                    <p className="">LEVEL WAACS</p>
                                 </div>
                             </div>
                             <div className="infosBox">

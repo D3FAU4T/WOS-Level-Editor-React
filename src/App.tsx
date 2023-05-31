@@ -3,7 +3,6 @@ import Play from './Pages/Play';
 import Editor from './Pages/Editor';
 import Scoreboard from './Pages/Scoreboard';
 import { LevelData, TopbarMode } from './Interfaces/LevelData';
-import { extractScore } from './Components/Functions';
 import GameStart from './Pages/GameStart';
 import io from 'socket.io-client';
 
@@ -43,6 +42,7 @@ const level: LevelData = {
 }
 
 export default function App() {
+  const [host, setHost] = useState("d3fau4t");
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
   const [levelFinished, setLevelFinished] = useState<boolean>(false);
@@ -105,6 +105,8 @@ export default function App() {
       socket.emit('handshake', 'Hello from client')
     });
 
+    socket.on('host', username => setHost(username));
+
     socket.on('newLevel', (data) => {
       setLevelFinished(false);
       const board = data
@@ -134,13 +136,14 @@ export default function App() {
       socket.off('newLevel');
       socket.off('guess');
       socket.off('triggerScoreboard');
+      socket.off('host');
     }
   }, [])
 
   return (
     <main>
       {
-        page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
+        page === "GameStart" ? <GameStart Host={host} PageChanger={setPage} Socket={socket} /> :
           page === "Play" ? <Play SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
               page === "Scoreboard" ? <Scoreboard Streamer={scoreboardData.Streamer} SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
