@@ -1,5 +1,5 @@
 import '../CSS/Editor.css';
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GoalBar from '../Components/GoalBar';
 import Topbar from '../Components/Topbar';
 import { LevelData, Slot, TopbarMode } from '../Interfaces/LevelData';
@@ -174,11 +174,12 @@ const Play = (Props: Props) => {
                     FoundedWords={getCountOfFoundedWords(Props.MetaData)}
                     PageChanger={Props.PageChanger}
                     SkippedLevels={
-                        calculateStars(
-                            getTotalPoints(Props.MetaData),
-                            getCurrentPoints(Props.MetaData),
-                            parseInt(Props.MetaData.level)
-                        )
+                        // calculateStars(
+                        //     getTotalPoints(Props.MetaData),
+                        //     getCurrentPoints(Props.MetaData),
+                        //     parseInt(Props.MetaData.level)
+                        // )
+                        3
                     }
                 />
             </div>

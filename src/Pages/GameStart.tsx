@@ -154,7 +154,7 @@ const GameStart = (Props: Props) => {
                                     <div className="section">
                                         <span>RECORD</span>
                                     </div>
-                                    <p className="">LEVEL WAACS</p>
+                                    <p className="">LEVEL TINMAN</p>
                                 </div>
                             </div>
                             <div className="infosBox">
