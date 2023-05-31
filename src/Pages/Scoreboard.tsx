@@ -1,8 +1,9 @@
 import '../CSS/Editor.css';
 import React, { useEffect, useRef, useState } from "react";
 import lottie from 'lottie-web';
+import animationData from '../Animations/fantastic.json';
+import contagem from "../Animations/contagem.json";
 import { Socket } from 'socket.io-client';
-import axios from 'axios';
 
 type Props = {
     CurrentLevel: number;
@@ -15,11 +16,6 @@ type Props = {
 }
 
 const Scoreboard = (Props: Props) => {
-    let fantastic: any;
-
-    axios.get("https://wos.gg/lotties/fantastic.json")
-    .then(res => fantastic = res.data)
-    .catch(err => console.log(err));
 
     const containerRef = useRef<HTMLDivElement>(null);
     const countdownRef = useRef<HTMLDivElement>(null);
@@ -77,25 +73,24 @@ const Scoreboard = (Props: Props) => {
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
-                animationData: fantastic.data,
+                animationData
             })
         }
 
         return () => window.removeEventListener('resize', resize);
     }, []);
 
-    const triggerCountdown = async () => {
+    const triggerCountdown = () => {
         Props.Socket.emit("continue");
         setCountdownHidden(false);
 
         if (countdownRef.current) {
-            const contagem = await axios.get("https://wos.gg/lotties/contagem.json");
             const animation = lottie.loadAnimation({
                 container: countdownRef.current,
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
-                animationData: contagem.data,
+                animationData: contagem,
             });
 
             setTimeout(() => {
