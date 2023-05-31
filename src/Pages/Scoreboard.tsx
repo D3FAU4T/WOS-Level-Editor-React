@@ -13,6 +13,7 @@ type Props = {
     PageChanger: (page: string) => void;
     SetLevelFinished: React.Dispatch<React.SetStateAction<boolean>>;
     Socket: Socket;
+    Streamer: string;
 }
 
 const Scoreboard = (Props: Props) => {
@@ -47,7 +48,7 @@ const Scoreboard = (Props: Props) => {
             levelRanking.push(
                 <li key={'Score' + key}>
                     <span className="pos">{levelRankingCount}</span>
-                    <span className="nick">{key}</span>
+                    <span className={`nick${key.toLowerCase() === Props.Streamer.toLowerCase() ? " streamer" : ""}`}>{key}</span>
                     <span className="pts">{value}</span>
                 </li>
             );

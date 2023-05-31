@@ -143,7 +143,7 @@ export default function App() {
         page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
           page === "Play" ? <Play SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
-              page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
+              page === "Scoreboard" ? <Scoreboard Streamer={scoreboardData.Streamer} SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
         .sort((a, b) => b[1] - a[1])
         .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} LevelRanking={Object.entries(scoreboardData.LevelRanking)
         .sort((a, b) => b[1] - a[1])
