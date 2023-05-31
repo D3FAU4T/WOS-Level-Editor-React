@@ -133,7 +133,11 @@ const GameStart = (Props: Props) => {
         loadAnimations();
         resize();
         window.addEventListener('resize', resize);
-        return () => window.removeEventListener('resize', resize);
+        Props.Socket.on("startCommand", () => startGame());
+        return () => {
+            window.removeEventListener('resize', resize);
+            Props.Socket.off("startCommand");
+        }
     }, []);
 
     return (
@@ -154,7 +158,7 @@ const GameStart = (Props: Props) => {
                                     <div className="section">
                                         <span>RECORD</span>
                                     </div>
-                                    <p className="">LEVEL TINMAN</p>
+                                    <p className="">LEVEL BUSBAR</p>
                                 </div>
                             </div>
                             <div className="infosBox">
