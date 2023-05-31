@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import lottie from "lottie-web";
-import animationData from '../Animations/estrela.json';
+import axios from "axios";
 
 type Props = {
     Hidden?: boolean;
@@ -16,13 +16,14 @@ const Fantastic = (Props: Props) => {
     const fantasticClassRef = React.useRef<HTMLDivElement>(null);
 
     if (!Props.Hidden && containerRef.current) {
-        setTimeout(() => {
+        setTimeout(async () => {
+            const estrela = await axios.get("https://wos.gg/lotties/estrela.json");
             const animation = lottie.loadAnimation({
                 container: containerRef.current!,
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
-                animationData,
+                animationData: estrela.data,
             });
 
             setTimeout(() => {

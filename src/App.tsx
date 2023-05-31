@@ -1,10 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import Play from './Pages/Play';
-import Editor from './Pages/Editor';
-import Scoreboard from './Pages/Scoreboard';
+import React, { Suspense, useEffect, useState } from 'react';
 import { LevelData, TopbarMode } from './Interfaces/LevelData';
-import { extractScore } from './Components/Functions';
-import GameStart from './Pages/GameStart';
 import io from 'socket.io-client';
 
 const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
@@ -43,6 +38,13 @@ const level: LevelData = {
 }
 
 export default function App() {
+  // Imports
+  const Play = React.lazy(() => import('./Pages/Play'));
+  const Editor = React.lazy(() => import('./Pages/Editor'));
+  const Scoreboard = React.lazy(() => import('./Pages/Scoreboard'));
+  const GameStart = React.lazy(() => import('./Pages/GameStart'));
+
+
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
   const [levelFinished, setLevelFinished] = useState<boolean>(false);
@@ -73,19 +75,19 @@ export default function App() {
 
   function updateSlotContent(boardObj: LevelData, word: string) {
     const columns = [boardObj.column1, boardObj.column2, boardObj.column3];
-  
+
     columns.forEach(column => {
       column.forEach(obj => {
         const slotElement = document.querySelector(`#OurSlot${obj.index}`);
         const nickElement = document.querySelector(`#OurSlot${obj.index} .nick`);
         const letters = obj.word.split('');
-  
+
         if (letters.includes('?') || obj.word != word) return;
         slotElement!.classList.add('hit');
         slotElement!.classList.add('expired');
         nickElement!.textContent = obj.username;
         const letterElements = document.querySelectorAll(`#OurSlot${obj.index} .letter`);
-  
+
         letters.forEach((letter, i) => {
           if (letterElements[i]) {
             letterElements[i].innerHTML = `<span>${letter}</span>`;
@@ -138,18 +140,20 @@ export default function App() {
   }, [])
 
   return (
-    <main>
-      {
-        page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
-          page === "Play" ? <Play SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
-            page === "Editor" ? <Editor /> :
-              page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
-        .sort((a, b) => b[1] - a[1])
-        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} LevelRanking={Object.entries(scoreboardData.LevelRanking)
-        .sort((a, b) => b[1] - a[1])
-        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
-                null
-      }
-    </main>
+    <Suspense fallback={<div>Loading...</div>}>
+      <main>
+        {
+          page === "GameStart" ? <GameStart PageChanger={setPage} Socket={socket} /> :
+            page === "Play" ? <Play SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
+              page === "Editor" ? <Editor /> :
+                page === "Scoreboard" ? <Scoreboard SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
+                  .sort((a, b) => b[1] - a[1])
+                  .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} LevelRanking={Object.entries(scoreboardData.LevelRanking)
+                    .sort((a, b) => b[1] - a[1])
+                    .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
+                  null
+        }
+      </main>
+    </Suspense>
   )
 }

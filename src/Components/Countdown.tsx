@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import lottie from "lottie-web";
-import animationData from "../Animations/contagem.json";
+import axios from "axios";
 
 type Props = {
     Hidden?: boolean;
 }
+
+const contagem = await axios.get("https://wos.gg/lotties/contagem.json");
 
 const Countdown = (Props: Props) => {
 
@@ -18,7 +20,7 @@ const Countdown = (Props: Props) => {
             renderer: 'svg',
             loop: true,
             autoplay: true,
-            animationData,
+            animationData: contagem.data,
         })
     }
 

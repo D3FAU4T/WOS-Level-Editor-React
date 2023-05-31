@@ -2,11 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import '../CSS/Editor.css';
 import axios from "axios";
 import lottie from 'lottie-web';
-// import animationData from '../Animations/logo.json';
-import letterJumbleAnimation from '../Animations/homeFind_en.json';
-import letterSolveAnimation from '../Animations/homeSolve_en.json';
-import letterGuessAnimation from '../Animations/lock_en.json';
-import contagem from "../Animations/contagem.json";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -40,17 +35,18 @@ const GameStart = (Props: Props) => {
         }
     }
 
-    const startGame = () => {
+    const startGame = async () => {
         Props.Socket.emit("startGame");
         setCountdownHidden(false);
 
         if (countdownRef.current) {
+            const contagem = await axios.get("https://wos.gg/lotties/contagem.json");
             const countdown = lottie.loadAnimation({
                 container: countdownRef.current,
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
-                animationData: contagem
+                animationData: contagem.data
             });
 
             setTimeout(() => {
@@ -70,37 +66,40 @@ const GameStart = (Props: Props) => {
 
     const loadAnimations = async () => {
         if (logoAnimRef.current && letterJumbleAnimRef.current && letterSolveAnimRef.current && letterGuessAnimRef.current) {
-            const { data } = await axios.get("https://wos.gg/lotties/logo.json")
+            const logo = await axios.get("https://wos.gg/lotties/logo.json")
             lottie.loadAnimation({
                 container: logoAnimRef.current,
                 renderer: 'svg',
                 loop: true,
                 autoplay: true,
-                animationData: data
+                animationData: logo.data
             });
 
+            const letterJumbleAnimation = await axios.get("https://wos.gg/lotties/homeFind_en.json")
             const step0 = lottie.loadAnimation({
                 container: letterJumbleAnimRef.current,
                 renderer: 'svg',
                 loop: false,
                 autoplay: true,
-                animationData: letterJumbleAnimation
+                animationData: letterJumbleAnimation.data
             });
 
+            const letterSolveAnimation = await axios.get("https://wos.gg/lotties/homeSolve_en.json")
             const step1 = lottie.loadAnimation({
                 container: letterSolveAnimRef.current,
                 renderer: 'svg',
                 loop: false,
                 autoplay: false,
-                animationData: letterSolveAnimation
+                animationData: letterSolveAnimation.data
             });
 
+            const letterGuessAnimation = await axios.get("https://wos.gg/lotties/lock_en.json")
             const step2 = lottie.loadAnimation({
                 container: letterGuessAnimRef.current,
                 renderer: 'svg',
                 loop: false,
                 autoplay: false,
-                animationData: letterGuessAnimation
+                animationData: letterGuessAnimation.data
             });
 
             // Start with step0

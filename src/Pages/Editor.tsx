@@ -4,8 +4,9 @@ import Letters from '../Components/Letters';
 import CreateColumn from '../Components/CreateColumn';
 import Setting from '../Components/Setting';
 import { LevelData, Slot } from '../Interfaces/LevelData';
-import Timebar from '../Components/Timebar';
 import GoalBar from '../Components/GoalBar';
+import LanguageSetting from '../Components/LanguageSetting';
+import Topbar from '../Components/Topbar';
 import {
     getCountOfFoundedWords,
     getCurrentPoints,
@@ -14,8 +15,6 @@ import {
     getWordsOfTheLevel,
     makePassingPoints
 } from '../Components/Functions';
-import LanguageSetting from '../Components/LanguageSetting';
-import Topbar from '../Components/Topbar';
 
 const level: LevelData = {
     "lang": "English",
