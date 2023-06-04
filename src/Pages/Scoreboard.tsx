@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import lottie from 'lottie-web';
 import animationData from '../Animations/fantastic.json';
 import contagem from "../Animations/contagem.json";
+import contagemAU from "../Sounds/contagem.mp3";
 import { Socket } from 'socket.io-client';
 
 type Props = {
@@ -17,6 +18,8 @@ type Props = {
 }
 
 const Scoreboard = (Props: Props) => {
+
+    const contagemSound = new Audio(contagemAU);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const countdownRef = useRef<HTMLDivElement>(null);
@@ -62,6 +65,7 @@ const Scoreboard = (Props: Props) => {
         setCountdownHidden(false);
 
         if (countdownRef.current) {
+            contagemSound.play();
             const animation = lottie.loadAnimation({
                 container: countdownRef.current,
                 renderer: 'svg',
