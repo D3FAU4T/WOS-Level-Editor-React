@@ -18,7 +18,6 @@ const Timebar = (Props: Props) => {
     const expiredLocks = Props.TotalLocks - Props.ExpiredLocks;
 
     const timeClass = useRef<HTMLSpanElement>(null);
-    const timeExitRef = useRef<HTMLDivElement>(null);
 
     // for (let i = 0; i < Props.TotalLocks; i++) {
     //     let lockClass = "mark";
@@ -38,8 +37,9 @@ const Timebar = (Props: Props) => {
         }, (parseInt(Props.TransitionDuration.replace('ms', '')) - 20000))
 
         setTimeout(async () => {
-            if (timeExitRef.current) {
-                timeExitRef.current.className = "time timeExit";
+            const syncTimerExit = document.getElementById('syncTimerExit');
+            if (syncTimerExit) {
+                syncTimerExit.classList.add("timeExit");
                 Props.SyncLettersSetter(<span id='syncSwitch'>SYNCING LAST HITS</span>);
                 setTimeout(() => {
                     Props.LevelFinished(true);
@@ -49,7 +49,7 @@ const Timebar = (Props: Props) => {
     }, [])
 
     return (
-        <div className="time" id="syncTimerExit" ref={timeExitRef}>
+        <div className="time" id="syncTimerExit">
             <i className="icon"></i>
             <div id="timebar">
                 <span style={{ width: `${Props.TimePercentage}%`, transitionDuration: Props.TransitionDuration }} className="" ref={timeClass}></span>
