@@ -57,31 +57,7 @@ const Scoreboard = (Props: Props) => {
         return levelRanking;
     }
 
-    useEffect(() => {
-        Props.SetLevelFinished(false);
-        resize();
-        window.addEventListener('resize', resize);
-
-        setTimeout(() => {
-            if (animationRef.current) {
-                animationRef.current.className = "interval fade-enter-done";
-            }
-        }, 1000);
-
-        if (containerRef.current) {
-            lottie.loadAnimation({
-                container: containerRef.current,
-                renderer: 'svg',
-                loop: false,
-                autoplay: true,
-                animationData
-            })
-        }
-
-        return () => window.removeEventListener('resize', resize);
-    }, []);
-
-    const triggerCountdown = () => {
+  const triggerCountdown = () => {
         Props.Socket.emit("continue");
         setCountdownHidden(false);
 
@@ -108,6 +84,37 @@ const Scoreboard = (Props: Props) => {
             });
         }
     }
+
+    useEffect(() => {
+        Props.SetLevelFinished(false);
+        resize();
+        window.addEventListener('resize', resize);
+
+        setTimeout(() => {
+            if (animationRef.current) {
+                animationRef.current.className = "interval fade-enter-done";
+            }
+        }, 1000);
+
+        if (containerRef.current) {
+            lottie.loadAnimation({
+                container: containerRef.current,
+                renderer: 'svg',
+                loop: false,
+                autoplay: true,
+                animationData
+            })
+        }
+
+        Props.Socket.on('continueCommand', () => {
+            triggerCountdown();
+        });
+
+        return () => {
+          window.removeEventListener('resize', resize);
+          Props.Socket.off('continueCommand');
+        }
+    }, []);
 
     const triggerExit = () => {
         if (animationRef.current) {
