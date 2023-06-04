@@ -6,6 +6,7 @@ import letterJumbleAnimation from '../Animations/homeFind_en.json';
 import letterSolveAnimation from '../Animations/homeSolve_en.json';
 import letterGuessAnimation from '../Animations/lock_en.json';
 import contagem from "../Animations/contagem.json";
+import contagemAU from "../Sounds/contagem.mp3";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -15,6 +16,8 @@ type Props = {
 }
 
 const GameStart = (Props: Props) => {
+
+    const contagemSound = new Audio(contagemAU);
 
     const logoAnimRef = useRef<HTMLSpanElement>(null);
     const letterJumbleAnimRef = useRef<HTMLSpanElement>(null);
@@ -45,6 +48,7 @@ const GameStart = (Props: Props) => {
         setCountdownHidden(false);
 
         if (countdownRef.current) {
+            contagemSound.play();
             const countdown = lottie.loadAnimation({
                 container: countdownRef.current,
                 renderer: 'svg',
