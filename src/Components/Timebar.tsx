@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import tempoFinal from '../Sounds/tempo_final.mp3';
+import tempo_final from '../Sounds/tempo_final.mp3';
 
 type Props = {
     TimePercentage: number;
@@ -12,12 +12,13 @@ type Props = {
 
 const Timebar = (Props: Props) => {
 
-    const endTimeSound = new Audio(tempoFinal);
+    const tempoFinalSound = new Audio(tempo_final);
 
     const locks: JSX.Element[] = [];
     const expiredLocks = Props.TotalLocks - Props.ExpiredLocks;
 
     const timeClass = useRef<HTMLSpanElement>(null);
+    const timeExitRef = useRef<HTMLDivElement>(null);
 
     // for (let i = 0; i < Props.TotalLocks; i++) {
     //     let lockClass = "mark";
@@ -31,15 +32,14 @@ const Timebar = (Props: Props) => {
         if (timeClass.current) timeClass.current.style.width = `0%`;
         setTimeout(async () => {
             if (timeClass.current) {
-                endTimeSound.play();
+                tempoFinalSound.play();
                 timeClass.current.className = "endTime";
             }
         }, (parseInt(Props.TransitionDuration.replace('ms', '')) - 20000))
 
         setTimeout(async () => {
-            const syncTimerExit = document.getElementById('syncTimerExit');
-            if (syncTimerExit) {
-                syncTimerExit.classList.add("timeExit");
+            if (timeExitRef.current) {
+                timeExitRef.current.classList.add('timeExit');
                 Props.SyncLettersSetter(<span id='syncSwitch'>SYNCING LAST HITS</span>);
                 setTimeout(() => {
                     Props.LevelFinished(true);
@@ -49,7 +49,7 @@ const Timebar = (Props: Props) => {
     }, [])
 
     return (
-        <div className="time" id="syncTimerExit">
+        <div className="time" id="syncTimerExit" ref={timeExitRef}>
             <i className="icon"></i>
             <div id="timebar">
                 <span style={{ width: `${Props.TimePercentage}%`, transitionDuration: Props.TransitionDuration }} className="" ref={timeClass}></span>
