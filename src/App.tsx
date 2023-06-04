@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Play from './Pages/Play';
 import Editor from './Pages/Editor';
 import Scoreboard from './Pages/Scoreboard';
-import { LevelData, TopbarMode } from './Interfaces/LevelData';
 import GameStart from './Pages/GameStart';
+import acerto from './Sounds/acerto.mp3';
 import io from 'socket.io-client';
+import { LevelData, TopbarMode } from './Interfaces/LevelData';
 
 const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
   transports: ["websocket"]
@@ -42,6 +43,9 @@ const level: LevelData = {
 }
 
 export default function App() {
+
+  const acertoSound = new Audio(acerto);
+
   const [host, setHost] = useState("d3fau4t");
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
@@ -120,6 +124,7 @@ export default function App() {
     });
 
     socket.on('guess', (board, topbarData, scoreboardData) => {
+      acertoSound.play();
       setLevelData(board);
       updateSlotContent(board, topbarData.word);
       setTopbardata(topbarData);
