@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import tempo_final from '../Sounds/tempo_final.mp3';
+import { Socket } from "socket.io-client";
 
 type Props = {
     TimePercentage: number;
@@ -8,6 +9,7 @@ type Props = {
     TransitionDuration: string;
     SyncLettersSetter: React.Dispatch<React.SetStateAction<JSX.Element | null>>;
     LevelFinished: React.Dispatch<React.SetStateAction<boolean>>;
+    Socket: Socket;
 }
 
 const Timebar = (Props: Props) => {
@@ -39,6 +41,7 @@ const Timebar = (Props: Props) => {
 
         setTimeout(async () => {
             if (timeExitRef.current) {
+                Props.Socket.emit('syncLock');
                 timeExitRef.current.classList.add('timeExit');
                 Props.SyncLettersSetter(<span id='syncSwitch'>SYNCING LAST HITS</span>);
                 setTimeout(() => {

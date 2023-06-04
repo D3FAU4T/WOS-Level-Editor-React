@@ -7,6 +7,7 @@ import Letters from '../Components/Letters';
 import Fantastic from '../Components/Fantastic';
 import CreateColumn from '../Components/CreateColumn';
 import LanguageSetting from '../Components/LanguageSetting';
+import { Socket } from 'socket.io-client';
 import {
     calculateStars,
     getCountOfFoundedWords,
@@ -24,6 +25,7 @@ type Props = {
     SetLevelFinished: React.Dispatch<React.SetStateAction<boolean>>;
     PageChanger: (page: string) => void;
     SetLevelData: React.Dispatch<React.SetStateAction<LevelData>>;
+    Socket: Socket;
     TopBarData: {
         guesser: string,
         word: string,
@@ -129,6 +131,7 @@ const Play = (Props: Props) => {
                                     SyncLettersSetter={setSyncingText}
                                     LevelFinished={Props.SetLevelFinished}
                                     TransitionDuration='117000ms'
+                                    Socket={Props.Socket}
                                 />
                                 <div className="answer" id="answerslots">
                                     <CreateColumn MetaData={Props.MetaData} Column={Props.MetaData.column1} StartingIndex={0} SlotLockUpdater={updateSlotLock} />
