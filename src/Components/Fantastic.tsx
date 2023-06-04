@@ -40,7 +40,6 @@ const Fantastic = (Props: Props) => {
                           const component = document.getElementById('fantasticComponent');
                           component!.hidden = true;
                           component!.className = 'popup wdone popup-enter popup-enter-active';
-                          console.log('test')
                         }, 330);                        
                     }, 3000)
                 }
