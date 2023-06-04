@@ -1,5 +1,5 @@
 import '../CSS/Editor.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import GoalBar from '../Components/GoalBar';
 import Topbar from '../Components/Topbar';
 import { LevelData, Slot, TopbarMode } from '../Interfaces/LevelData';
@@ -34,6 +34,7 @@ type Props = {
 const Play = (Props: Props) => {
 
     const [syncingText, setSyncingText] = useState<JSX.Element | null>(null);
+    const room = useRef<HTMLDivElement>(null);
 
     const resize = () => {
         const contentTop = document.getElementById("contentTop");
@@ -68,6 +69,11 @@ const Play = (Props: Props) => {
     // }
 
     useEffect(() => {
+        
+        setTimeout(() => {
+            if (room.current) room.current.className = "room fade-enter-done";
+        }, 1000);
+
         resize();
         window.addEventListener('resize', resize);
         return () => window.removeEventListener('resize', resize);
@@ -78,7 +84,7 @@ const Play = (Props: Props) => {
             <div id="root1">
                 <div id="contentTop" style={{ transform: "scale(0.3)" }}>
                     <div className="content">
-                        <div className="room fade-enter fade-enter-active">
+                        <div className="room fade-enter fade-enter-active" ref={room}>
                             <header>
                                 <span className="wos"></span>
                                 <div className="word" id="topbarWordHit">
