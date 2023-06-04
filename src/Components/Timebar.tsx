@@ -32,13 +32,13 @@ const Timebar = (Props: Props) => {
         if (timeClass.current) timeClass.current.style.width = `0%`;
         setTimeout(async () => {
             if (timeClass.current) {
+                endTimeSound.play();
                 timeClass.current.className = "endTime";
             }
         }, (parseInt(Props.TransitionDuration.replace('ms', '')) - 20000))
 
         setTimeout(async () => {
             if (timeExitRef.current) {
-                endTimeSound.play();
                 timeExitRef.current.className = "time timeExit";
                 Props.SyncLettersSetter(<span id='syncSwitch'>SYNCING LAST HITS</span>);
                 setTimeout(() => {
