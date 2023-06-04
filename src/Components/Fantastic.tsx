@@ -35,7 +35,13 @@ const Fantastic = (Props: Props) => {
                     animation.removeEventListener('drawnFrame');
                     setTimeout(() => {
                         fantasticClassRef.current!.className = "popup wdone popup-exit popup-exit-active";
-                        setTimeout(() => Props.PageChanger("Scoreboard"), 330);
+                        setTimeout(() => {
+                          Props.PageChanger("Scoreboard");
+                          const component = document.getElementById('fantasticComponent');
+                          component!.hidden = true;
+                          component!.className = 'popup wdone popup-enter popup-enter-active';
+                          console.log('test')
+                        }, 330);                        
                     }, 3000)
                 }
             });
@@ -45,7 +51,7 @@ const Fantastic = (Props: Props) => {
 
     return (
         <div>
-            <div className="popup wdone popup-enter popup-enter-active" hidden={Props.Hidden} ref={fantasticClassRef}>
+            <div className="popup wdone popup-enter popup-enter-active" hidden={Props.Hidden} ref={fantasticClassRef} id="fantasticComponent">
                 <div className="brilho"></div>
                 <div className="contentPopup" style={{ transform: "scale(0.234405)" }} id="Fantastic">
                     <div className="welldone">
