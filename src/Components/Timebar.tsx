@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import tempoFinal from '../Sounds/tempo_final.mp3';
 
 type Props = {
     TimePercentage: number;
@@ -10,6 +11,9 @@ type Props = {
 }
 
 const Timebar = (Props: Props) => {
+
+    const endTimeSound = new Audio(tempoFinal);
+
     const locks: JSX.Element[] = [];
     const expiredLocks = Props.TotalLocks - Props.ExpiredLocks;
 
@@ -34,7 +38,8 @@ const Timebar = (Props: Props) => {
 
         setTimeout(async () => {
             if (timeExitRef.current) {
-                timeExitRef.current.classList.add('timeExit');
+                endTimeSound.play();
+                timeExitRef.current.className = "time timeExit";
                 Props.SyncLettersSetter(<span id='syncSwitch'>SYNCING LAST HITS</span>);
                 setTimeout(() => {
                     Props.LevelFinished(true);
