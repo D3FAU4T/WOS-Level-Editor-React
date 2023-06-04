@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import lottie from "lottie-web";
 import animationData from '../Animations/estrela.json';
+import vitoria from '../Sounds/vitoria.mp3';
 
 type Props = {
     Hidden?: boolean;
@@ -12,11 +13,15 @@ type Props = {
 }
 
 const Fantastic = (Props: Props) => {
+
+    const vitoriaSound = new Audio(vitoria);
+
     const containerRef = React.useRef<HTMLDivElement>(null);
     const fantasticClassRef = React.useRef<HTMLDivElement>(null);
 
     if (!Props.Hidden && containerRef.current) {
         setTimeout(() => {
+            vitoriaSound.play();
             const animation = lottie.loadAnimation({
                 container: containerRef.current!,
                 renderer: 'svg',
