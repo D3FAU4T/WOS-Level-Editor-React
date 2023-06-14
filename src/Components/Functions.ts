@@ -210,3 +210,7 @@ export const createJSON = (
 
     return board;
 }
+
+export const rankingSorter = (ranking: {[username: string]: number }) => Object.entries(ranking)
+.sort((a, b) => b[1] - a[1])
+.reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
