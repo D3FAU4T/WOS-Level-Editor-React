@@ -6,6 +6,7 @@ import GameStart from './Pages/GameStart';
 import acerto from './Sounds/acerto.mp3';
 import io from 'socket.io-client';
 import { LevelData, TopbarMode } from './Interfaces/LevelData';
+import { rankingSorter } from './Components/Functions';
 
 const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
   transports: ["websocket"]
@@ -151,11 +152,7 @@ export default function App() {
         page === "GameStart" ? <GameStart Host={host} PageChanger={setPage} Socket={socket} /> :
           page === "Play" ? <Play Socket={socket} SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
-              page === "Scoreboard" ? <Scoreboard Streamer={scoreboardData.Streamer} SetLevelFinished={setLevelFinished} TotalRanking={Object.entries(scoreboardData.TotalRanking)
-        .sort((a, b) => b[1] - a[1])
-        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} LevelRanking={Object.entries(scoreboardData.LevelRanking)
-        .sort((a, b) => b[1] - a[1])
-        .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
+              page === "Scoreboard" ? <Scoreboard Streamer={scoreboardData.Streamer} SetLevelFinished={setLevelFinished} TotalRanking={rankingSorter(scoreboardData.TotalRanking)} LevelRanking={rankingSorter(scoreboardData.LevelRanking)} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
                 null
       }
     </main>
