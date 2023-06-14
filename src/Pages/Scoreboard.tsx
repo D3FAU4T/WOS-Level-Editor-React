@@ -166,7 +166,7 @@ const Scoreboard = (Props: Props) => {
                             <div className="rkgGeral">
                                 <div className="title">
                                     <button className="reward">REWARD</button>
-                                    <h4><strong>TOTAL </strong>RANKING</h4>
+                                    <h4><strong>LIFETIME </strong>RANKING</h4>
                                 </div>
                                 <div className="containerScroll">
                                     <div className="scroll">
