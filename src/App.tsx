@@ -53,7 +53,7 @@ export default function App() {
   const acertoSound = new Audio(acerto);
 
   const [record, setRecord] = useState(1);
-  const [host, setHost] = useState("d3fau4t");
+  const [host, setHost] = useState("system");
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
   const [levelFinished, setLevelFinished] = useState<boolean>(false);
