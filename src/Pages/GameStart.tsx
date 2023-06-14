@@ -13,6 +13,7 @@ type Props = {
     PageChanger: (page: string) => void;
     Socket: Socket;
     Host: string;
+    Record: number;
 }
 
 const GameStart = (Props: Props) => {
@@ -162,7 +163,7 @@ const GameStart = (Props: Props) => {
                                     <div className="section">
                                         <span>RECORD</span>
                                     </div>
-                                    <p className="">LEVEL REWAACED</p>
+                                    <p className="">LEVEL {Props.Record}</p>
                                 </div>
                             </div>
                             <div className="infosBox">

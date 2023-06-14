@@ -43,21 +43,29 @@ const level: LevelData = {
   ]
 }
 
+type handshakeData = {
+  type: "socket.io",
+  record: number
+}
+
 export default function App() {
 
   const acertoSound = new Audio(acerto);
 
+  const [record, setRecord] = useState(1);
   const [host, setHost] = useState("d3fau4t");
   const [page, setPage] = useState("GameStart");
   const [levelData, setLevelData] = useState<LevelData>(level);
   const [levelFinished, setLevelFinished] = useState<boolean>(false);
   const [scoreboardData, setScoreboardData] = useState<{
+    Record: number;
     Level: number;
     LevelRanking: { [username: string]: number };
     Streamer: string;
     TotalRanking: { [username: string]: number };
     UpNext: number;
   }>({
+    Record: 1,
     Level: 1,
     LevelRanking: {},
     Streamer: "",
@@ -105,8 +113,9 @@ export default function App() {
       console.log("Connected to server: ", socket.id);
     });
 
-    socket.on('handshake', data => {
+    socket.on('handshake', (data: handshakeData) => {
       console.log(data)
+      setRecord(data.record);
       socket.emit('handshake', 'Hello from client')
     });
 
@@ -149,7 +158,7 @@ export default function App() {
   return (
     <main>
       {
-        page === "GameStart" ? <GameStart Host={host} PageChanger={setPage} Socket={socket} /> :
+        page === "GameStart" ? <GameStart Host={host} PageChanger={setPage} Socket={socket} Record={record} /> :
           page === "Play" ? <Play Socket={socket} SetLevelFinished={setLevelFinished} SetLevelData={setLevelData} MetaData={levelData} PageChanger={setPage} TopBarData={topbarData} LevelFinished={levelFinished} /> :
             page === "Editor" ? <Editor /> :
               page === "Scoreboard" ? <Scoreboard Streamer={scoreboardData.Streamer} SetLevelFinished={setLevelFinished} TotalRanking={rankingSorter(scoreboardData.TotalRanking)} LevelRanking={rankingSorter(scoreboardData.LevelRanking)} CurrentLevel={scoreboardData.Level} UpNext={scoreboardData.UpNext} PageChanger={setPage} Socket={socket} /> :
