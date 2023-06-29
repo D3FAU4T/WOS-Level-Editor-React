@@ -64,6 +64,13 @@ const Play = (Props: Props) => {
         Props.SetLevelData({ ...Props.MetaData });
     }
 
+    const fantasticFix = () => {
+        const fantastic = document.getElementById("ftastic");        
+        if (fantastic) {
+            fantastic.hidden = true;
+        }                
+    }
+
     // SYNCING WORDS PART
     // const handleSyncChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     if (e.target.checked) Props.ChangeSyncState(<span id='syncSwitch'>SYNCING LAST HITS</span>);
@@ -71,7 +78,7 @@ const Play = (Props: Props) => {
     // }
 
     useEffect(() => {
-        
+        fantasticFix();
         setTimeout(() => {
             if (room.current) room.current.className = "room fade-enter-done";
         }, 1000);
@@ -130,7 +137,7 @@ const Play = (Props: Props) => {
                                     ExpiredLocks={Props.MetaData.timebar.locks.expired}
                                     SyncLettersSetter={setSyncingText}
                                     LevelFinished={Props.SetLevelFinished}
-                                    TransitionDuration='117000ms'
+                                    TransitionDuration='300000ms'
                                     Socket={Props.Socket}
                                 />
                                 <div className="answer" id="answerslots">
