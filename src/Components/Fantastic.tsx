@@ -50,7 +50,7 @@ const Fantastic = (Props: Props) => {
 
     return (
         <div>
-            <div className="popup wdone popup-enter popup-enter-active" hidden={Props.Hidden} ref={fantasticClassRef}>
+            <div className="popup wdone popup-enter popup-enter-active" hidden={Props.Hidden} ref={fantasticClassRef} id="ftastic">
                 <div className="brilho"></div>
                 <div className="contentPopup" style={{ transform: "scale(0.234405)" }} id="Fantastic">
                     <div className="welldone">
