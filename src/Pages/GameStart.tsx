@@ -8,6 +8,7 @@ import letterGuessAnimation from '../Animations/lock_en.json';
 import contagem from "../Animations/contagem.json";
 import contagemAU from "../Sounds/contagem.mp3";
 import { Socket } from "socket.io-client";
+import GameStartSetting from "../Components/GameStartSetting";
 
 type Props = {
     PageChanger: (page: string) => void;
@@ -29,11 +30,13 @@ const GameStart = (Props: Props) => {
     const animRef = useRef<HTMLDivElement>(null);
     const [step, setStep] = useState(0);
     const [countdownHidden, setCountdownHidden] = useState(true);
+    const [gSettingState, setGSettingState] = useState(true);
 
     const resize = () => {
         const contentTop = document.getElementById("contentTop");
+        const setting = document.getElementById("configPopupGame");
 
-        if (contentTop) {
+        if (contentTop && setting) {
             const maxWidth = contentTop.clientWidth;
             const maxHeight = contentTop.clientHeight;
             const width = window.innerWidth;
@@ -41,6 +44,7 @@ const GameStart = (Props: Props) => {
             const isMax = width >= maxWidth! && height >= maxHeight!;
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            setting.style.transform = isMax ? '' : 'scale(' + scale + ')';
         }
     }
 
@@ -131,6 +135,10 @@ const GameStart = (Props: Props) => {
         }
     };
 
+    const changeGSettingState = () => {
+        setGSettingState(!gSettingState);
+    }
+
     useEffect(() => {
         setTimeout(() => {
             if (animRef.current) animRef.current.className = "start fade-enter-done";
@@ -151,7 +159,7 @@ const GameStart = (Props: Props) => {
                 <div className="content">
                     <div className="start fade-enter fade-enter-active" ref={animRef}>
                         <header>
-                            <button className="config" title="Settings"></button>
+                            <button className="config" title="Settings" onClick={changeGSettingState}></button>
                         </header>
                         <div className="center">
                             <div className="logoContent">
@@ -225,6 +233,7 @@ const GameStart = (Props: Props) => {
                     </div>
                 </div>
             </div>
+            <GameStartSetting hidden={gSettingState} stateChanger={setGSettingState} Socket={Props.Socket} />
         </div>
     );
 }

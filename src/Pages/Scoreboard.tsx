@@ -5,6 +5,7 @@ import animationData from '../Animations/fantastic.json';
 import contagem from "../Animations/contagem.json";
 import contagemAU from "../Sounds/contagem.mp3";
 import { Socket } from 'socket.io-client';
+import GameStartSetting from '../Components/GameStartSetting';
 
 type Props = {
     CurrentLevel: number;
@@ -26,12 +27,14 @@ const Scoreboard = (Props: Props) => {
     const animationRef = useRef<HTMLDivElement>(null);
     const countdownClassRef = useRef<HTMLDivElement>(null);
     const [countdownHidden, setCountdownHidden] = useState(true);
+    const [gSettingState, setGSettingState] = useState(true);
 
     const resize = () => {
         const contentTop = document.getElementById("contentTop");
         const countdownScale = document.getElementById("countdownScale");
+        const setting = document.getElementById("configPopupGame");
 
-        if (contentTop) {
+        if (contentTop && setting) {
             const maxWidth = contentTop.clientWidth;
             const maxHeight = contentTop.clientHeight;
             const width = window.innerWidth;
@@ -40,7 +43,12 @@ const Scoreboard = (Props: Props) => {
             const scale = Math.min(width / maxWidth!, height / maxHeight!);
             contentTop.style.transform = isMax ? '' : 'scale(' + scale + ')';
             countdownScale!.style.transform = isMax ? '' : 'scale(' + scale + ')';
+            setting.style.transform = isMax ? '' : 'scale(' + scale + ')';
         }
+    }
+
+    const changeGSettingState = () => {
+        setGSettingState(!gSettingState);
     }
 
     const getScoreJSX = (ranking: { [key: string]: number }): JSX.Element[] => {
@@ -141,7 +149,7 @@ const Scoreboard = (Props: Props) => {
                                 <span id="UpNext">UP NEXT: <strong>LEVEL {Props.UpNext}</strong></span>
                             </div>
                             <div className="rightHeader">
-                                <button className="config" title="Settings"></button>
+                                <button className="config" title="Settings" onClick={changeGSettingState}></button>
                             </div>
                         </header>
                         <div className="middle">
@@ -207,6 +215,7 @@ const Scoreboard = (Props: Props) => {
                     </div>
                 </div>
             </div>
+            <GameStartSetting hidden={gSettingState} stateChanger={changeGSettingState} Socket={Props.Socket} />
         </div>
     );
 }
