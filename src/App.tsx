@@ -8,7 +8,9 @@ import io from 'socket.io-client';
 import { LevelData, TopbarMode } from './Interfaces/LevelData';
 import { rankingSorter } from './Components/Functions';
 
-const socket = io('https://wos-level-editor.d3fau4tbot.repl.co', {
+const localhost = false;
+
+const socket = io(localhost ? 'http://localhost:6969' : 'https://wos-level-editor.d3fau4tbot.repl.co', {
   transports: ["websocket"]
 });
 
